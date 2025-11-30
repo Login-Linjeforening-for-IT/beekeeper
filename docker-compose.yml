@@ -35,6 +35,7 @@ services:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api"]
       interval: 5s
       retries: 5
+      start_period: 5m
 
   postgres:
     image: postgres:15
