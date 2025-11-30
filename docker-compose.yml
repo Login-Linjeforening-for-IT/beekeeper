@@ -41,6 +41,8 @@ services:
       - beekeeper_default
 
 networks:
+  beekeeper_default:
+    external: false
   queenbee_default:
     external: true
 
