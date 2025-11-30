@@ -7,7 +7,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - "8001:8080"
+      - "8002:8080"
     command: sh -c "./scripts/init.sh"
     depends_on:
       - postgres
