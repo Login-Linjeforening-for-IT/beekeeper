@@ -19,8 +19,9 @@ services:
       retries: 5
       start_period: 5m
     networks:
+      - beekeeper_default 
       - queenbee_default
-    
+
   postgres:
     image: postgres:15
     container_name: beekeeper_database
@@ -36,8 +37,12 @@ services:
       test: ["CMD-SHELL", "pg_isready -U beekeeper -d beekeeper"]
       interval: 5s
       retries: 5
+    networks:
+      - beekeeper_default
 
 networks:
+  beekeeper_default:
+    external: false
   queenbee_default:
     external: true
 
