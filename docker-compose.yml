@@ -1,40 +1,4 @@
 services:
-  beekeeper:
-    container_name: beekeeper
-    image: beekeeper
-    restart: always
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-        NEXT_PUBLIC_BROWSER_API: ${NEXT_PUBLIC_BROWSER_API}
-        NEXT_PUBLIC_CDN: ${NEXT_PUBLIC_CDN}
-        NEXT_PUBLIC_DEBUG: ${NEXT_PUBLIC_DEBUG}
-    ports:
-      - "8200:3000"
-    depends_on:
-      - beekeeper_api
-    environment:
-      DOCTL_TOKEN: ${DOCTL_TOKEN}
-
-      # Gitlab
-      PRIVATE_TOKEN: ${PRIVATE_TOKEN}
-
-      # PSQL db
-      DB: ${DB}
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-
-      # Authentik integration
-      BASE_URL: ${BASE_URL}
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
-      REDIRECT_URI: ${REDIRECT_URI}
-      BEEKEEPER_URL: ${BEEKEEPER_URL}
-      AUTHENTIK_TOKEN: ${AUTHENTIK_TOKEN}
-
   beekeeper_api:
     container_name: beekeeper_api 
     image: beekeeper_api
@@ -43,7 +7,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - "8201:8080"
+      - "8001:8080"
     command: sh -c "./scripts/init.sh"
     depends_on:
       - postgres
