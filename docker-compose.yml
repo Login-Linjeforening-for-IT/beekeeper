@@ -13,13 +13,14 @@ services:
       - postgres
     env_file:
       .env
-
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/api"]
       interval: 5s
       retries: 5
       start_period: 5m
-
+    networks:
+      - queenbee_default
+    
   postgres:
     image: postgres:15
     container_name: beekeeper_database
@@ -35,6 +36,10 @@ services:
       test: ["CMD-SHELL", "pg_isready -U beekeeper -d beekeeper"]
       interval: 5s
       retries: 5
+
+networks:
+  queenbee_default:
+    external: true
 
 volumes:
   postgres_data:
