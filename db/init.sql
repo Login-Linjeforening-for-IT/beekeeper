@@ -161,6 +161,14 @@ CREATE TABLE IF NOT EXISTS namespace_ingress_events (
     events TEXT NOT NULL
 );
 
+-- Docker containers
+CREATE TABLE IF NOT EXISTS container (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    container TEXT NOT NULL,
+    rebuild BOOLEAN NOT NULL DEFAULT false
+);
+
 -- --- Local log optimizations ---
 
 -- Heavy operations, more RAM required
