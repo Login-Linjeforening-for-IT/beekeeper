@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS namespace_ingress_events (
 );
 
 -- Docker containers
-CREATE TABLE IF NOT EXISTS container (
+CREATE TABLE IF NOT EXISTS containers (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     container TEXT NOT NULL,
