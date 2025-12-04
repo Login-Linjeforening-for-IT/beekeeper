@@ -26,9 +26,6 @@ RUN npm install
 # Copies the rest of the API source code
 COPY . .
 
-# Builds the project
-RUN npm run build
-
 # Adds script execution permissions
 RUN chmod +x /api/scripts/init.sh /api/scripts/run_local_commands.sh /api/scripts/run_global_commands.sh /api/scripts/update.sh /api/scripts/run_now.sh 
 
