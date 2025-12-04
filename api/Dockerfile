@@ -1,5 +1,5 @@
-# Node image with Alpine Linux
-FROM node:20-alpine
+# Latest Alpine Image
+FROM node:alpine
 
 # Installs dependencies
 RUN apk add --no-cache python3 make g++ curl postgresql-client 
