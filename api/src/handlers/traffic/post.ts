@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
-import debug from '#utils/debug.js'
+import debug from '#utils/debug.ts'
 import config from '#constants'
 
 type PostTrafficBody = {
