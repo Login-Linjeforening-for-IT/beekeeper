@@ -20,8 +20,10 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
     const secret = config.TRAFFIC_SECRET || ''
     const providedSecret = req.headers['x-traffic-secret']
     const providedIP = req.headers['x-forwarded-for']
+    const realIP = req.headers['x-real-ip']
 
-    console.warn(`Traffic POST from IP: ${providedIP}`)
+
+    console.warn(`Traffic POST from IP: ${providedIP}, Real IP: ${realIP}, IP: ${req.socket.remoteAddress}`)
 
     if (!allowedIPs.includes(providedIP as string) || providedSecret !== secret) {
         return res.status(403).send({ error: 'Forbidden' })
