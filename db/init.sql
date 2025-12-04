@@ -169,6 +169,32 @@ CREATE TABLE IF NOT EXISTS containers (
     rebuild BOOLEAN NOT NULL DEFAULT false
 );
 
+
+-- Traffic table
+CREATE TABLE IF NOT EXISTS traffic (
+    id SERIAL PRIMARY KEY,
+    user_agent TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    path TEXT NOT NULL,
+    method TEXT NOT NULL,
+    referer TEXT NOT NULL,
+    request_time DOUBLE PRECISION NOT NULL,
+    status INTEGER NOT NULL,
+    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Indexes for traffic
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_traffic_domain_trgm ON traffic (domain);
+CREATE INDEX IF NOT EXISTS idx_traffic_path_trgm ON traffic (path);
+CREATE INDEX IF NOT EXISTS idx_traffic_user_agent_trgm ON traffic (user_agent);
+CREATE INDEX IF NOT EXISTS idx_traffic_status ON traffic (status);
+CREATE INDEX IF NOT EXISTS idx_traffic_method ON traffic (method);
+CREATE INDEX IF NOT EXISTS idx_traffic_domain_btree ON traffic (domain);
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_status ON traffic (timestamp DESC, status);
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_domain ON traffic (timestamp DESC, domain);
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_method ON traffic (timestamp DESC, method);
+
 -- --- Local log optimizations ---
 
 -- Heavy operations, more RAM required
@@ -213,23 +239,3 @@ SET maintenance_work_mem = '4MB';
 
 -- Adds parallel workers
 SET max_parallel_workers_per_gather = 4;
-
--- Traffic table
-CREATE TABLE IF NOT EXISTS traffic (
-    id SERIAL PRIMARY KEY,
-    user_agent TEXT NOT NULL,
-    domain TEXT NOT NULL,
-    path TEXT NOT NULL,
-    method TEXT NOT NULL,
-    referer TEXT NOT NULL,
-    request_time DOUBLE PRECISION NOT NULL,
-    status INTEGER NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
--- Indexes for traffic
-CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_traffic_domain_trgm ON traffic USING gin (domain gin_trgm_ops);
-CREATE INDEX IF NOT EXISTS idx_traffic_path_trgm ON traffic USING gin (path gin_trgm_ops);
-CREATE INDEX IF NOT EXISTS idx_traffic_user_agent_trgm ON traffic USING gin (user_agent gin_trgm_ops);
-CREATE INDEX IF NOT EXISTS idx_traffic_status ON traffic (status);
