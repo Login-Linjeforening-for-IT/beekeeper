@@ -19,7 +19,8 @@ const requiredEnvironmentVariables = [
     'WEBHOOK_URL',
     'CRITICAL_ROLE',
     'CRITICAL_DEVELOPMENT_ROLE',
-    'HEARTBEAT_REFERENCE'
+    'HEARTBEAT_REFERENCE',
+    'TRAFFIC_SECRET'
 ]
 
 const missingVariables = requiredEnvironmentVariables.filter(
@@ -75,6 +76,7 @@ const config = {
     TIMEOUT_MS: 30000,
     HEARTBEAT_URL: 'https://status.login.no/api/push/{reference}?status=up&msg=OK&ping={ping}',
     HEARTBEAT_REFERENCE: env.HEARTBEAT_REFERENCE,
+    TRAFFIC_SECRET: env.TRAFFIC_SECRET
 }
 
 export default config
