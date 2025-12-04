@@ -17,11 +17,13 @@ type PostTrafficBody = {
 
 export default async function postTraffic(req: FastifyRequest, res: FastifyReply) {
     const allowedIPs = ['127.0.0.1', '::1']
-    const clientIP = req.ip || ''
     const secret = config.TRAFFIC_SECRET || ''
     const providedSecret = req.headers['x-traffic-secret']
+    const providedIP = req.headers['x-forwarded-for']
 
-    if (!allowedIPs.includes(clientIP) || providedSecret !== secret) {
+    console.warn(`Traffic POST from IP: ${providedIP}`)
+
+    if (!allowedIPs.includes(providedIP as string) || providedSecret !== secret) {
         return res.status(403).send({ error: 'Forbidden' })
     }
 
