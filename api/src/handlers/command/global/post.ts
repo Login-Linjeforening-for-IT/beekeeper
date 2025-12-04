@@ -1,7 +1,7 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "@db"
-import tokenWrapper from "../../../utils/tokenWrapper.js"
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import run from "#db"
+import tokenWrapper from "#utils/tokenWrapper.ts"
+import debug from '#utils/debug.ts'
 
 export default async function postGlobalCommand(req: FastifyRequest, res: FastifyReply) {
     const { name, command, author, reason } = req.body as { name: string, command: string, author: string, reason: string } || {}

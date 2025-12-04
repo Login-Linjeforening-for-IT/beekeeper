@@ -1,8 +1,10 @@
-export enum Debug {
-    PRODUCTION = 'production',
-    BASIC = 'basic',
-    DETAILED = 'detailed',
-    FULL = 'full'
+export type Debug = 'production' | 'basic' | 'detailed' | 'full'
+
+export const Debug = {
+    PRODUCTION: 'production' as const,
+    BASIC: 'basic' as const,
+    DETAILED: 'detailed' as const,
+    FULL: 'full' as const,
 }
 
 type Log = {

@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import tokenWrapper from "@utils/tokenWrapper.js"
-import discordAlert from "@utils/discordAlert.js"
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import tokenWrapper from "#utils/tokenWrapper.ts"
+import discordAlert from "#utils/discordAlert.ts"
 
 export default async function getToken(req: FastifyRequest, res: FastifyReply) {
     const response = await tokenWrapper(req, res)

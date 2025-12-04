@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "@db"
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import run from "#db"
+import debug from '#utils/debug.ts'
 
 export default async function getIngressEvents(req: FastifyRequest, res: FastifyReply) {
     const { context, namespace, name } = req.params as { context: string, namespace: string, name: string }

@@ -1,9 +1,9 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { exec } from "child_process"
-import run from "@db"
+import run from "#db"
 import path from "path"
-import tokenWrapper from "../../utils/tokenWrapper.js"
-import debug from '@utils/debug.js'
+import tokenWrapper from "#utils/tokenWrapper.ts"
+import debug from '#utils/debug.ts'
 
 type PostCommandBody = {
     id: string

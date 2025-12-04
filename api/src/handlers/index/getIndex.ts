@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify"
+import type { FastifyReply, FastifyRequest } from 'fastify'
 
 /**
  * Base information about the api if the route was not specified

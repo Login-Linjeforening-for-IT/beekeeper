@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import config from '@constants'
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import config from '#constants'
+import debug from '#utils/debug.ts'
 
 const { USER_ENDPOINT, AUTHENTIK_TOKEN } = config
 

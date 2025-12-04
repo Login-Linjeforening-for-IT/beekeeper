@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import config from '@constants'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import config from '#constants'
 
 const { CLIENT_ID, REDIRECT_URI, AUTH_URL } = config
 

@@ -1,9 +1,9 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import run from "@db"
-import { loadSQL } from "@utils/loadSQL.js"
-import config from '@constants'
-import getContext from '@utils/getContext.js'
-import debug from '@utils/debug.js'
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import run from "#db"
+import { loadSQL } from "#utils/loadSQL.ts"
+import config from '#constants'
+import getContext from '#utils/getContext.ts'
+import debug from '#utils/debug.ts'
 
 const { DEFAULT_RESULTS_PER_PAGE } = config
 

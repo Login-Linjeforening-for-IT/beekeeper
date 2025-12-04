@@ -1,12 +1,11 @@
 {
   "name": "beekeeper-api",
   "version": "1.5.15",
-  "main": "index.js",
+  "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch src/index.ts",
-    "build": "tsc && tsc-alias",
-    "start": "node --trace-gc dist/src/index.js"
+    "start": "node src/index.ts",
+    "trace": "node --trace-gc src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,13 +15,19 @@
     "@fastify/cors": "^11.1.0",
     "dotenv": "^17.2.2",
     "fastify": "^5.6.1",
-    "pg": "^8.16.3",
-    "tsx": "^4.20.5"
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/pg": "^8.15.5",
-    "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.16",
     "typescript": "^5.9.2"
+  },
+  "imports": {
+    "#utils/*": "./src/utils/*",
+    "#plugins/*": "./src/plugins/*",
+    "#ws": "./src/plugins/ws.ts",
+    "#constants": "./src/constants.ts",
+    "#components/*": "./src/components/*",
+    "#db": "./src/db.ts",
+    "#/*": "./src/*"
   }
 }

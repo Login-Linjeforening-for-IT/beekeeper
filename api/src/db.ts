@@ -1,7 +1,7 @@
 import pg from 'pg'
-import config from '@constants'
-import sleep from '@utils/sleep.js'
-import debug from '@utils/debug.js'
+import config from '#constants'
+import sleep from '#utils/sleep.ts'
+import debug from '#utils/debug.ts'
 
 const {
     DB,

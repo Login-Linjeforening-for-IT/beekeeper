@@ -1,5 +1,5 @@
-import config from "@constants"
-import debug from './debug.js';
+import config from "#constants"
+import debug from './debug.ts';
 
 const { CRITICAL_ROLE, WEBHOOK_URL } = config
 

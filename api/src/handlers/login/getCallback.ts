@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import config from '@constants'
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import config from '#constants'
+import debug from '#utils/debug.ts'
 
 const { TOKEN_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, USERINFO_URL, BEEKEEPER_URL } = config
 

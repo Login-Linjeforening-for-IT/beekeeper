@@ -1,8 +1,8 @@
 
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "@db"
-import tokenWrapper from "../../utils/tokenWrapper.js"
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import run from "#db"
+import tokenWrapper from "#utils/tokenWrapper.ts"
+import debug from '#utils/debug.ts'
 
 type PostNamespaceProps = {
     name: string,

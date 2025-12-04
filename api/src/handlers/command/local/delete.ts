@@ -1,7 +1,7 @@
-import { FastifyReply, FastifyRequest } from "fastify"
-import run from "@db"
-import tokenWrapper from "../../../utils/tokenWrapper.js"
-import debug from '@utils/debug.js'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import run from "#db"
+import tokenWrapper from "#utils/tokenWrapper.ts"
+import debug from '#utils/debug.ts'
 
 export default async function deleteLocalCommand(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }

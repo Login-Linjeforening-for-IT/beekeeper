@@ -1,5 +1,5 @@
-import checkMaxConnectionsCron from './maxConnections.js'
-import heartbeat from './heartbeat.js'
+import checkMaxConnectionsCron from './maxConnections.ts'
+import heartbeat from './heartbeat.ts'
 
 export default function cron() {
     checkMaxConnectionsCron()

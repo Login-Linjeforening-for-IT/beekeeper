@@ -1,4 +1,4 @@
-import run from '@db'
+import run from '#db'
 
 export default async function getContexts() {
     const result = await run(`SELECT name FROM contexts ORDER BY name;`)

@@ -1,8 +1,8 @@
 import cors from '@fastify/cors'
 import Fastify from 'fastify'
-import apiRoutes from './routes.js'
-import getIndexHandler from './handlers/index/getIndex.js'
-import cron from '@utils/cron.js'
+import apiRoutes from './routes.ts'
+import getIndexHandler from './handlers/index/getIndex.ts'
+import cron from '#utils/cron.ts'
 
 const fastify = Fastify({
     logger: true
