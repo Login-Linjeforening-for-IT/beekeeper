@@ -7,7 +7,7 @@ type GetMetricsParams = {
 }
 
 export default async function getMetrics(req: FastifyRequest, res: FastifyReply) {
-    const { time_start, time_end,  } = req.params as GetMetricsParams || {}
+    const { time_start, time_end,  } = req.query as GetMetricsParams || {}
 
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
 
