@@ -1,5 +1,7 @@
 import type { FastifyInstance, FastifyPluginOptions } from "fastify"
 
+import preHandler from "#utils/authMiddleware.ts"
+
 import getPods from './handlers/pod/get.ts'
 import getUser from './handlers/user/getUser.ts'
 import getUsers from './handlers/user/getUsers.ts'
@@ -52,6 +54,7 @@ import deleteMessage from './handlers/message/delete.ts'
 
 import postTraffic from "./handlers/traffic/post.ts"
 import getMetrics from "./handlers/traffic/getStats.ts"
+import getRecords from "./handlers/traffic/getRecords.ts"
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -131,6 +134,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.delete('/messages/:id', deleteMessage)
 
     // traffic logging
-    fastify.post('/traffic', postTraffic)
     fastify.get('/traffic/metrics', getMetrics)
+    fastify.get('/traffic/records', getRecords)
+    fastify.post('/traffic', postTraffic)
 }
