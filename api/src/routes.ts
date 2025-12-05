@@ -134,7 +134,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.delete('/messages/:id', deleteMessage)
 
     // traffic logging
-    fastify.get('/traffic/metrics', getMetrics)
-    fastify.get('/traffic/records', getRecords)
+    fastify.get('/traffic/metrics', {preHandler: preHandler}, getMetrics)
+    fastify.get('/traffic/records', {preHandler: preHandler}, getRecords)
     fastify.post('/traffic', postTraffic)
 }
