@@ -2,15 +2,18 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 
 type GetMetricsParams = {
-    time_start?: Date
-    time_end?: Date
+    time_start?: string
+    time_end?: string
 }
 
 export default async function getMetrics(req: FastifyRequest, res: FastifyReply) {
     const { time_start, time_end,  } = req.query as GetMetricsParams || {}
 
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
-
+    let startDate = (req.query as GetMetricsParams).time_start ? new Date(String((req.query as GetMetricsParams).time_start)) : new Date(Date.now() - oneWeekMs)
+    let endDate = (req.query as GetMetricsParams).time_end ? new Date(String((req.query as GetMetricsParams).time_end)) : new Date()
+    if (Number.isNaN(startDate.getTime())) startDate = new Date(Date.now() - oneWeekMs)
+    if (Number.isNaN(endDate.getTime())) endDate = new Date()
     try {
         const result = await run(
             `SELECT 
@@ -60,10 +63,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                 ) AS os_counts) AS top_os
             FROM traffic
             WHERE timestamp BETWEEN $1 AND $2`,
-            [
-                (time_start || new Date(Date.now() - oneWeekMs)).toISOString(),
-                (time_end || new Date()).toISOString()
-            ]
+            [startDate.toISOString(), endDate.toISOString()]
         )
 
         return res.status(200).send(result.rows[0])

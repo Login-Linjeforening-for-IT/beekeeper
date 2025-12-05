@@ -14,8 +14,10 @@ export default async function getRecords(req: FastifyRequest, res: FastifyReply)
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
 
     try {
-        const startDate = time_start ? new Date(String(time_start)) : new Date(Date.now() - oneWeekMs)
-        const endDate = time_end ? new Date(String(time_end)) : new Date()
+        let startDate = time_start ? new Date(String(time_start)) : new Date(Date.now() - oneWeekMs)
+        let endDate = time_end ? new Date(String(time_end)) : new Date()
+        if (Number.isNaN(startDate.getTime())) startDate = new Date(Date.now() - oneWeekMs)
+        if (Number.isNaN(endDate.getTime())) endDate = new Date()
         const params = [startDate.toISOString(), endDate.toISOString()]
 
         const pageNumber = Number(page) > 0 ? Number(page) : 1
