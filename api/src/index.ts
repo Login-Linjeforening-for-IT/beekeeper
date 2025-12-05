@@ -3,11 +3,14 @@ import Fastify from 'fastify'
 import apiRoutes from './routes.ts'
 import getIndexHandler from './handlers/index/getIndex.ts'
 import cron from '#utils/cron.ts'
+import fp from './fp.ts'
+import { fallback } from '#utils/status/defaults.ts'
 
 const fastify = Fastify({
     logger: true
 })
 
+fastify.decorate('status', Buffer.from(JSON.stringify({ ...fallback.degraded })))
 fastify.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
@@ -15,6 +18,7 @@ fastify.register(cors, {
 
 const port = Number(process.env.PORT) || 8080
 
+fastify.register(fp)
 fastify.register(apiRoutes, { prefix: "/api" })
 fastify.get('/', getIndexHandler)
 

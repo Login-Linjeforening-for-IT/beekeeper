@@ -1,4 +1,4 @@
-import config from '@constants'
+import config from '#constants'
 
 type Data = {
     content?: string
