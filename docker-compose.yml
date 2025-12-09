@@ -21,6 +21,8 @@ services:
     networks:
       - beekeeper_default 
       - queenbee_default
+    mem_limit: 1g
+    cpus: "2.0"
 
   postgres:
     image: postgres:18
@@ -39,6 +41,8 @@ services:
       retries: 5
     networks:
       - beekeeper_default
+    mem_limit: 1g
+    cpus: "2.0"
 
 networks:
   beekeeper_default:
