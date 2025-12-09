@@ -4,17 +4,25 @@ import run from '#db'
 type GetMetricsParams = {
     time_start?: string
     time_end?: string
+    domain?: string
 }
 
 export default async function getMetrics(req: FastifyRequest, res: FastifyReply) {
-    const { time_start, time_end,  } = req.query as GetMetricsParams || {}
+    const { time_start, time_end, domain } = req.query as GetMetricsParams || {}
 
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
-    let startDate = (req.query as GetMetricsParams).time_start ? new Date(String((req.query as GetMetricsParams).time_start)) : new Date(Date.now() - oneWeekMs)
-    let endDate = (req.query as GetMetricsParams).time_end ? new Date(String((req.query as GetMetricsParams).time_end)) : new Date()
+    let startDate = time_start ? new Date(String(time_start)) : new Date(Date.now() - oneWeekMs)
+    let endDate = time_end ? new Date(String(time_end)) : new Date()
     if (Number.isNaN(startDate.getTime())) startDate = new Date(Date.now() - oneWeekMs)
     if (Number.isNaN(endDate.getTime())) endDate = new Date()
     try {
+        const params = [startDate.toISOString(), endDate.toISOString()]
+        let whereClause = "WHERE timestamp BETWEEN $1 AND $2"
+        if (domain) {
+            whereClause += " AND domain = $3"
+            params.push(domain)
+        }
+
         const result = await run(
             `SELECT 
                 COUNT(*) AS total_requests,
@@ -23,7 +31,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                 (SELECT jsonb_agg(jsonb_build_object('key', status, 'count', count) ORDER BY count DESC) FROM (
                     SELECT status, COUNT(*) AS count
                     FROM traffic
-                    WHERE timestamp BETWEEN $1 AND $2
+                    ${whereClause}
                     GROUP BY status
                     ORDER BY count DESC
                     LIMIT 5
@@ -31,7 +39,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                 (SELECT jsonb_agg(jsonb_build_object('key', method, 'count', count) ORDER BY count DESC) FROM (
                     SELECT method, COUNT(*) AS count
                     FROM traffic
-                    WHERE timestamp BETWEEN $1 AND $2
+                    ${whereClause}
                     GROUP BY method
                     ORDER BY count DESC
                     LIMIT 5
@@ -39,7 +47,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                 (SELECT jsonb_agg(jsonb_build_object('key', domain, 'count', count) ORDER BY count DESC) FROM (
                     SELECT domain, COUNT(*) AS count
                     FROM traffic
-                    WHERE timestamp BETWEEN $1 AND $2
+                    ${whereClause}
                     GROUP BY domain
                     ORDER BY count DESC
                     LIMIT 5
@@ -56,14 +64,14 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                         END AS os,
                         COUNT(*) AS count
                     FROM traffic
-                    WHERE timestamp BETWEEN $1 AND $2
+                    ${whereClause}
                     GROUP BY os
                     ORDER BY count DESC
                     LIMIT 5
                 ) AS os_counts) AS top_os
             FROM traffic
-            WHERE timestamp BETWEEN $1 AND $2`,
-            [startDate.toISOString(), endDate.toISOString()]
+            ${whereClause}`,
+            params
         )
 
         return res.status(200).send(result.rows[0])

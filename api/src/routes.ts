@@ -56,6 +56,7 @@ import deleteMessage from './handlers/message/delete.ts'
 import postTraffic from "./handlers/traffic/post.ts"
 import getMetrics from "./handlers/traffic/getStats.ts"
 import getRecords from "./handlers/traffic/getRecords.ts"
+import getDomains from "./handlers/traffic/getDomains.ts"
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -138,5 +139,6 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     // traffic logging
     fastify.get('/traffic/metrics', {preHandler: preHandler}, getMetrics)
     fastify.get('/traffic/records', {preHandler: preHandler}, getRecords)
+    fastify.get('/traffic/domains', {preHandler: preHandler}, getDomains)
     fastify.post('/traffic', postTraffic)
 }
