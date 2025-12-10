@@ -6,37 +6,43 @@ type GetRecordsParams = {
     time_end?: string
     limit?: string | number
     page?: string | number
+    domain?: string
 }
 
 export default async function getRecords(req: FastifyRequest, res: FastifyReply) {
-    const { time_start, time_end, limit, page } = req.query as GetRecordsParams || {}
+    const { time_start, time_end, limit, page, domain } = req.query as GetRecordsParams || {}
 
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
 
     try {
-        let startDate = time_start ? new Date(String(time_start)) : new Date(Date.now() - oneWeekMs)
-        let endDate = time_end ? new Date(String(time_end)) : new Date()
-        if (Number.isNaN(startDate.getTime())) startDate = new Date(Date.now() - oneWeekMs)
-        if (Number.isNaN(endDate.getTime())) endDate = new Date()
-        const params = [startDate.toISOString(), endDate.toISOString()]
+        const startDate = time_start && !Number.isNaN(new Date(String(time_start)).getTime())
+            ? new Date(String(time_start))
+            : new Date(Date.now() - oneWeekMs)
+        const endDate = time_end && !Number.isNaN(new Date(String(time_end)).getTime())
+            ? new Date(String(time_end))
+            : new Date()
 
-        const pageNumber = Number(page) > 0 ? Number(page) : 1
-        let limitValue = Number(limit) > 0 ? Number(limit) : 50
-        const maxLimit = 1000
-        if (limitValue > maxLimit) limitValue = maxLimit
+        const pageNumber = Math.max(Number(page) || 1, 1)
+        const limitValue = Math.min(Math.max(Number(limit) || 50, 1), 1000)
         const offset = (pageNumber - 1) * limitValue
+
+        const params = [limitValue, offset, startDate.toISOString(), endDate.toISOString()]
+        let whereClause = 'WHERE timestamp BETWEEN $3 AND $4'
+        if (domain) {
+            whereClause += ' AND domain = $5'
+            params.push(domain)
+        }
 
         const dataQuery = run(
             `SELECT * FROM traffic
-             WHERE timestamp BETWEEN $1 AND $2
+             ${whereClause}
              ORDER BY timestamp DESC
-             LIMIT $3 OFFSET $4`,
-            [...params, limitValue, offset]
+             LIMIT $1 OFFSET $2`,
+            params
         )
 
         const countQuery = run(
-            `SELECT COUNT(*) AS c FROM traffic
-             WHERE timestamp BETWEEN $1 AND $2`,
+            `SELECT COUNT(*) AS c FROM traffic ${whereClause}`,
             params
         )
 
