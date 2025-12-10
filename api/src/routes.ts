@@ -54,7 +54,7 @@ import deleteNamespaceIncident from './handlers/namespace/incident/delete.ts'
 import deleteMessage from './handlers/message/delete.ts'
 
 import postTraffic from "./handlers/traffic/post.ts"
-import getMetrics from "./handlers/traffic/getStats.ts"
+import getMetrics from "./handlers/traffic/getMetrics.ts"
 import getRecords from "./handlers/traffic/getRecords.ts"
 import getDomains from "./handlers/traffic/getDomains.ts"
 
