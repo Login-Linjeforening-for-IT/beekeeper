@@ -71,7 +71,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
                     ORDER BY avg_time DESC
                     LIMIT 5
                 ) AS path_avg_times) AS top_slow_paths,
-                (SELECT jsonb_agg(jsonb_build_object('key', path, 'error_count', error_count) ORDER BY error_count DESC) FROM (
+                (SELECT jsonb_agg(jsonb_build_object('key', path, 'count', error_count) ORDER BY error_count DESC) FROM (
                     SELECT path, COUNT(*) AS error_count
                     FROM traffic
                     ${whereClause} AND status >= 400
