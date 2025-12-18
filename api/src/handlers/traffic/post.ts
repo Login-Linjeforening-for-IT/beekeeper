@@ -4,15 +4,14 @@ import debug from '#utils/debug.ts'
 import config from '#constants'
 
 type PostTrafficBody = {
-    ip: string
     user_agent: string
     domain: string
     path: string
     method: string
     referer: string
+    timestamp: number
     request_time: number
     status: number
-    timestamp: number
 }
 
 export default async function postTraffic(req: FastifyRequest, res: FastifyReply) {
@@ -32,7 +31,7 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
     }
 
     try {
-        const ts = new Date(timestamp * 1000).toISOString()
+        const ts = new Date(timestamp).toISOString()
 
         await run(
             `INSERT INTO traffic (user_agent, domain, path, method, referer, request_time, status, timestamp)
