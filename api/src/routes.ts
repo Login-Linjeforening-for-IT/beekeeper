@@ -1,17 +1,18 @@
-import type { FastifyInstance, FastifyPluginOptions } from "fastify"
+import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
-import auth from "#utils/authMiddleware.ts"
+import auth from '#utils/authMiddleware.ts'
+
+import getIndex from './handlers/index/getIndex.ts'
+import getHealth from './handlers/index/getHealth.ts'
+import getVersion from './handlers/index/getVersion.ts'
+import getStatus from './handlers/index/getStatus.ts'
 
 import getPods from './handlers/pod/get.ts'
 import getUser from './handlers/user/getUser.ts'
 import getUsers from './handlers/user/getUsers.ts'
-import getIndex from './handlers/index/getIndex.ts'
 import getLogin from './handlers/login/getLogin.ts'
 import getToken from './handlers/login/getToken.ts'
 import getTokenBTG from './handlers/login/getTokenBTG.ts'
-import getVersion from './handlers/index/getVersion.ts'
-import getHealth from './handlers/index/getHealth.ts'
-import getStatus from './handlers/index/getStatus.ts'
 import getContexts from './handlers/context/get.ts'
 import getCallback from './handlers/login/getCallback.ts'
 import getLocalCommands from './handlers/command/local/get.ts'
@@ -53,14 +54,14 @@ import deleteNamespaceDomain from './handlers/namespace/domain/delete.ts'
 import deleteNamespaceIncident from './handlers/namespace/incident/delete.ts'
 import deleteMessage from './handlers/message/delete.ts'
 
-import postTraffic from "./handlers/traffic/post.ts"
-import getMetrics from "./handlers/traffic/getMetrics.ts"
-import getRecords from "./handlers/traffic/getRecords.ts"
-import getDomains from "./handlers/traffic/getDomains.ts"
+import postTraffic from './handlers/traffic/post.ts'
+import getMetrics from './handlers/traffic/getMetrics.ts'
+import getRecords from './handlers/traffic/getRecords.ts'
+import getDomains from './handlers/traffic/getDomains.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
-    fastify.get("/", getIndex)
+    fastify.get('/', getIndex)
     fastify.get('/health', getHealth)
     fastify.get('/version', getVersion)
     fastify.get('/status', getStatus)

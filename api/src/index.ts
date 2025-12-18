@@ -1,10 +1,12 @@
 import cors from '@fastify/cors'
 import Fastify from 'fastify'
 import apiRoutes from './routes.ts'
-import getIndexHandler from './handlers/index/getIndex.ts'
 import cron from '#utils/cron.ts'
 import fp from './fp.ts'
 import { fallback } from '#utils/status/defaults.ts'
+
+import getIndexHandler from './handlers/index/getIndex.ts'
+import getFavicon from './handlers/favicon/getFavicon.ts'
 
 const fastify = Fastify({
     logger: true
@@ -21,6 +23,7 @@ const port = Number(process.env.PORT) || 8080
 fastify.register(fp)
 fastify.register(apiRoutes, { prefix: "/api" })
 fastify.get('/', getIndexHandler)
+fastify.get('/favicon.ico', getFavicon)
 
 async function start() {
     try {
