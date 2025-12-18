@@ -11,7 +11,7 @@ declare module 'fastify' {
     }
 }
 
-export default async function authMiddleware(req: FastifyRequest, res: FastifyReply) {
+export default async function auth(req: FastifyRequest, res: FastifyReply) {
     const tokenResult = await checkToken(req, res)
     if (!tokenResult.valid || !tokenResult.userInfo) {
         return res.status(401).send({ error: tokenResult.error })

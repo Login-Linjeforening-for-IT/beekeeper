@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyPluginOptions } from "fastify"
 
-import preHandler from "#utils/authMiddleware.ts"
+import auth from "#utils/authMiddleware.ts"
 
 import getPods from './handlers/pod/get.ts'
 import getUser from './handlers/user/getUser.ts'
@@ -137,8 +137,8 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.delete('/messages/:id', deleteMessage)
 
     // traffic logging
-    fastify.get('/traffic/metrics', {preHandler}, getMetrics)
-    fastify.get('/traffic/records', {preHandler}, getRecords)
-    fastify.get('/traffic/domains', {preHandler}, getDomains)
+    fastify.get('/traffic/metrics', {preHandler: auth}, getMetrics)
+    fastify.get('/traffic/records', {preHandler: auth}, getRecords)
+    fastify.get('/traffic/domains', {preHandler: auth}, getDomains)
     fastify.post('/traffic', postTraffic)
 }
