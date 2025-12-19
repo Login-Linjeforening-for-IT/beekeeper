@@ -1,4 +1,4 @@
-import config from "#constants"
+import config from '#constants'
 
 export default async function heartbeat() {
     try {

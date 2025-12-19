@@ -183,6 +183,31 @@ CREATE TABLE IF NOT EXISTS traffic (
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Status table
+CREATE TABLE IF NOT EXISTS status (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('fetch', 'post')),
+    url TEXT,
+    interval INTEGER NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
+    webhook_url TEXT,
+    expected_down BOOLEAN NOT NULL DEFAULT FALSE,
+    max_consecutive_failures INTEGER NOT NULL DEFAULT 0,
+    note TEXT,
+    notified TIMESTAMPTZ,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS status_details (
+    id INTEGER PRIMARY KEY REFERENCES status(id) ON DELETE CASCADE,
+    expected_down BOOLEAN NOT NULL DEFAULT FALSE,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
+    delay INTEGER NOT NULL DEFAULT 0,
+    note TEXT,
+    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Indexes for traffic
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_traffic_domain_trgm ON traffic (domain);

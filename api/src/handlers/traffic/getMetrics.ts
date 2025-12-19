@@ -13,16 +13,23 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
     const oneWeekMs = 7 * 24 * 60 * 60 * 1000
     let startDate = time_start ? new Date(String(time_start)) : new Date(Date.now() - oneWeekMs)
     let endDate = time_end ? new Date(String(time_end)) : new Date()
-    if (Number.isNaN(startDate.getTime())) startDate = new Date(Date.now() - oneWeekMs)
-    if (Number.isNaN(endDate.getTime())) endDate = new Date()
+
+    if (Number.isNaN(startDate.getTime())) {
+        startDate = new Date(Date.now() - oneWeekMs)
+    }
+
+    if (Number.isNaN(endDate.getTime())) {
+        endDate = new Date()
+    }
+
     const durationMs = endDate.getTime() - startDate.getTime()
     const isHourly = durationMs < 24 * 60 * 60 * 1000
 
     try {
         const params = [startDate.toISOString(), endDate.toISOString()]
-        let whereClause = "WHERE timestamp BETWEEN $1 AND $2"
+        let whereClause = 'WHERE timestamp BETWEEN $1 AND $2'
         if (domain) {
-            whereClause += " AND domain = $3"
+            whereClause += ' AND domain = $3'
             params.push(domain)
         }
 

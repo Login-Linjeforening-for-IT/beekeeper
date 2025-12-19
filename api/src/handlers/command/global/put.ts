@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
+import run from '#db'
 import debug from '#utils/debug.ts'
 
 type PutGlobalCommandProps = {
@@ -13,7 +13,7 @@ type PutGlobalCommandProps = {
 export default async function putGlobalCommand(req: FastifyRequest, res: FastifyReply) {
     const { id, name, command, author, reason } = req.body as PutGlobalCommandProps || {}
     if (!id || !name || !command || !author || !reason) {
-        return res.status(400).send({ error: "Missing id, name, command, author or reason." })
+        return res.status(400).send({ error: 'Missing id, name, command, author or reason.' })
     }
 
     const exists = await run(`SELECT * FROM global_commands WHERE id = $1`, [id])
@@ -34,6 +34,6 @@ export default async function putGlobalCommand(req: FastifyRequest, res: Fastify
         return res.send({ message: `Successfully edited global command ${id}: ${name}.` })
     } catch (error) {
         debug({ basic: `Database error in putGlobalCommand: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

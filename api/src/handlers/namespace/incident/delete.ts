@@ -1,13 +1,13 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
-import tokenWrapper from "#utils/tokenWrapper.ts"
+import run from '#db'
+import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
 export default async function deleteNamespaceIncident(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     try {
@@ -16,6 +16,6 @@ export default async function deleteNamespaceIncident(req: FastifyRequest, res: 
         return res.send(result.rows)
     } catch (error) {
         debug({ basic: `Database error in deleteNamespaceIncident: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

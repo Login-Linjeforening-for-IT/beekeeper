@@ -1,6 +1,6 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import run from "#db"
-import { loadSQL } from "#utils/loadSQL.ts"
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import run from '#db'
+import { loadSQL } from '#utils/loadSQL.ts'
 import config from '#constants'
 import getContext from '#utils/getContext.ts'
 import debug from '#utils/debug.ts'
@@ -29,8 +29,8 @@ export default async function getLog(this: FastifyInstance, req: FastifyRequest,
 
     if (log !== 'local' && log !== 'global' || (log === 'local' && (!namespace || !context))) {
         const missingVars = !namespace || !context
-        const simple = "Missing context or namespace. This is a local log. Context and namespace is expected."
-        const advanced = "Invalid log parameter (log !== 'local' && log !== 'global' || (log === 'local' && (!namespace || !context)))"
+        const simple = 'Missing context or namespace. This is a local log. Context and namespace is expected.'
+        const advanced = `Invalid log parameter (log !== 'local' && log !== 'global' || (log === 'local' && (!namespace || !context)))`
         const error = missingVars ? simple : advanced
         return res.send({
             page,
@@ -101,6 +101,6 @@ export default async function getLog(this: FastifyInstance, req: FastifyRequest,
         return res.send(data)
     } catch (error) {
         debug({ basic: `Database error in getLog: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

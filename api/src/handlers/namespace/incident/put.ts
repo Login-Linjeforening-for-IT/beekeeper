@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
+import run from '#db'
 import debug from '#utils/debug.ts'
 
 type PutNamespaceIncidentProps = {
@@ -14,7 +14,7 @@ type PutNamespaceIncidentProps = {
 export default async function putNamespaceIncident(req: FastifyRequest, res: FastifyReply) {
     const { id, name, url, context, namespace, timestamp } = req.body as PutNamespaceIncidentProps || {}
     if (!id || !name || !url || !context || !namespace || !timestamp) {
-        return res.status(400).send({ error: "Missing id, name, url, context or namespace." })
+        return res.status(400).send({ error: 'Missing id, name, url, context or namespace.' })
     }
 
     const exists = await run(`SELECT * FROM namespace_incidents WHERE id = $1`, [id])
@@ -35,6 +35,6 @@ export default async function putNamespaceIncident(req: FastifyRequest, res: Fas
         return res.send({ message: `Successfully updated incident with id ${id}, name ${name} and timestamp ${timestamp} with url ${url} for namespace ${namespace} in context ${context}.` })
     } catch (error) {
         debug({ basic: `Database error in putNamespaceIncident: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

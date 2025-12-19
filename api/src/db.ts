@@ -15,9 +15,9 @@ const {
 } = config
 const { Pool } = pg
 const pool = new Pool({
-    user: DB_USER || "beekeeper",
-    host: DB_HOST || "beekeeper_database",
-    database: DB || "beekeeper",
+    user: DB_USER || 'beekeeper',
+    host: DB_HOST || 'beekeeper_database',
+    database: DB || 'beekeeper',
     password: DB_PASSWORD,
     port: Number(DB_PORT) || 5432,
     max: Number(DB_MAX_CONN) || 20,
@@ -25,7 +25,7 @@ const pool = new Pool({
     connectionTimeoutMillis: Number(DB_TIMEOUT_MS) || 3000
 })
 
-export default async function run(query: string, params?: (string | number | null)[]) {
+export default async function run(query: string, params?: (string | number | null | boolean)[]) {
     while (true) {
         try {
             const client = await pool.connect()

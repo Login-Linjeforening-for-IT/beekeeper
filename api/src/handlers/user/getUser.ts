@@ -11,7 +11,7 @@ type Data = {
 export default async function getUser(req: FastifyRequest, res: FastifyReply) {
     const { email } = req.params as { email: string }
     if (!email) {
-        return res.status(400).send({ error: "Missing ID." })
+        return res.status(400).send({ error: 'Missing ID.' })
     }
 
     try {
@@ -33,6 +33,6 @@ export default async function getUser(req: FastifyRequest, res: FastifyReply) {
         return res.status(400).send({ error: 'User not found' })
     } catch (error) {
         debug({ basic: `Database error in getUser: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

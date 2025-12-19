@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
-import tokenWrapper from "#utils/tokenWrapper.ts"
+import run from '#db'
+import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
 type PostLocalLogBody = {
@@ -17,11 +17,11 @@ export default async function postLocalLog(req: FastifyRequest, res: FastifyRepl
     const { context, name, event, command, app, pod, status } = req.body as PostLocalLogBody || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     if (!context || !name || !event || !command || !status) {
-        return res.status(400).send({ error: "Missing context, name, event, command, app, pod or status." })
+        return res.status(400).send({ error: 'Missing context, name, event, command, app, pod or status.' })
     }
 
     try {
@@ -36,6 +36,6 @@ export default async function postLocalLog(req: FastifyRequest, res: FastifyRepl
         return res.send({ message: `Successfully added event ${event} to the log for namespace ${name} in context ${context}.` })
     } catch (error) {
         debug({ basic: `Database error in postLocalLog: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

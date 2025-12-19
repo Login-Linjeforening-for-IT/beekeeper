@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
+import run from '#db'
 import debug from '#utils/debug.ts'
 
 type PutNamespaceNoteProps = {
@@ -14,7 +14,7 @@ type PutNamespaceNoteProps = {
 export default async function putNamespaceNote(req: FastifyRequest, res: FastifyReply) {
     const { id, context, namespace, status, message, author } = req.body as PutNamespaceNoteProps || {}
     if (!id || !context || !namespace || !status || !message || !author) {
-        return res.status(400).send({ error: "Missing id, context, namespace, status, message or author" })
+        return res.status(400).send({ error: 'Missing id, context, namespace, status, message or author' })
     }
 
     const exists = await run(`SELECT * FROM namespace_notes WHERE id = $1`, [id])
@@ -35,6 +35,6 @@ export default async function putNamespaceNote(req: FastifyRequest, res: Fastify
         return res.send({ message: `Successfully updated note with id ${id}.` })
     } catch (error) {
         debug({ basic: `Database error in putNamespaceNote: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

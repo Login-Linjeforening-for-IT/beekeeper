@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
+import run from '#db'
 import debug from '#utils/debug.ts'
 
 type PutMessageProps = {
@@ -13,7 +13,7 @@ type PutMessageProps = {
 export default async function putMessage(req: FastifyRequest, res: FastifyReply) {
     const { id, title, author, status, content } = req.body as PutMessageProps || {}
     if (!id || !title || !author || !status || !content) {
-        return res.status(400).send({ error: "Missing id, title, author, status or content" })
+        return res.status(400).send({ error: 'Missing id, title, author, status or content' })
     }
 
     const exists = await run(`SELECT * FROM messages WHERE id = $1`, [id])
@@ -34,6 +34,6 @@ export default async function putMessage(req: FastifyRequest, res: FastifyReply)
         return res.send({ message: `Successfully updated message with id ${id}.` })
     } catch (error) {
         debug({ basic: `Database error in putMessage: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

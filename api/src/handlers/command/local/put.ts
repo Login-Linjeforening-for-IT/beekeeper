@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
+import run from '#db'
 import debug from '#utils/debug.ts'
 
 type PutLocalCommandProps = {
@@ -15,7 +15,7 @@ type PutLocalCommandProps = {
 export default async function putLocalCommand(req: FastifyRequest, res: FastifyReply) {
     const { id, context, name, namespace, command, author, reason } = req.body as PutLocalCommandProps || {}
     if (!id || !context || !name || !namespace || !command || !author || !reason) {
-        return res.status(400).send({ error: "Missing id, context, name, namespace, command, author or reason." })
+        return res.status(400).send({ error: 'Missing id, context, name, namespace, command, author or reason.' })
     }
 
     const exists = await run(`SELECT * FROM local_commands WHERE id = $1`, [id])
@@ -36,6 +36,6 @@ export default async function putLocalCommand(req: FastifyRequest, res: FastifyR
         return res.send({ message: `Successfully added local command ${name} for namespace ${namespace} in context ${context}.` })
     } catch (error) {
         debug({ basic: `Database error in putLocalCommand: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

@@ -1,11 +1,6 @@
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
-import auth from '#utils/authMiddleware.ts'
-
-import getIndex from './handlers/index/getIndex.ts'
-import getHealth from './handlers/index/getHealth.ts'
-import getVersion from './handlers/index/getVersion.ts'
-import getStatus from './handlers/index/getStatus.ts'
+import preHandler from '#utils/authMiddleware.ts'
 
 import getPods from './handlers/pod/get.ts'
 import getUser from './handlers/user/getUser.ts'
@@ -13,6 +8,8 @@ import getUsers from './handlers/user/getUsers.ts'
 import getLogin from './handlers/login/getLogin.ts'
 import getToken from './handlers/login/getToken.ts'
 import getTokenBTG from './handlers/login/getTokenBTG.ts'
+import getHealthStatus from './handlers/index/getStatus.ts'
+import getStatus from './handlers/monitoring/get.ts'
 import getContexts from './handlers/context/get.ts'
 import getCallback from './handlers/login/getCallback.ts'
 import getLocalCommands from './handlers/command/local/get.ts'
@@ -58,13 +55,18 @@ import postTraffic from './handlers/traffic/post.ts'
 import getMetrics from './handlers/traffic/getMetrics.ts'
 import getRecords from './handlers/traffic/getRecords.ts'
 import getDomains from './handlers/traffic/getDomains.ts'
+import postStatusUpdate from './handlers/monitoring/postUpdate.ts'
+import postStatus from './handlers/monitoring/post.ts'
+import getIndex from './handlers/index/getIndex.ts'
+import getHealth from './handlers/index/getHealth.ts'
+import getVersion from './handlers/index/getVersion.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
     fastify.get('/', getIndex)
     fastify.get('/health', getHealth)
     fastify.get('/version', getVersion)
-    fastify.get('/status', getStatus)
+    fastify.get('/status', getHealthStatus)
 
     // context
     fastify.get('/contexts', getContexts)
@@ -138,8 +140,13 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.delete('/messages/:id', deleteMessage)
 
     // traffic logging
-    fastify.get('/traffic/metrics', {preHandler: auth}, getMetrics)
-    fastify.get('/traffic/records', {preHandler: auth}, getRecords)
-    fastify.get('/traffic/domains', {preHandler: auth}, getDomains)
+    fastify.get('/traffic/metrics', { preHandler }, getMetrics)
+    fastify.get('/traffic/records', { preHandler }, getRecords)
+    fastify.get('/traffic/domains', { preHandler }, getDomains)
     fastify.post('/traffic', postTraffic)
+
+    // status
+    fastify.get('/monitoring', getStatus)
+    fastify.post('/monitoring', postStatus)
+    fastify.post('/monitoring/:id', postStatusUpdate)
 }

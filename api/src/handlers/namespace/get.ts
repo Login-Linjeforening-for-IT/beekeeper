@@ -7,6 +7,6 @@ export default async function getNamespaces(_: FastifyRequest, res: FastifyReply
         return res.send(await data())
     } catch (error) {
         debug({ basic: `Database error in getNamespaces: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

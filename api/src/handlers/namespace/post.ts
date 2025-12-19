@@ -1,7 +1,7 @@
 
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
-import tokenWrapper from "#utils/tokenWrapper.ts"
+import run from '#db'
+import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
 type PostNamespaceProps = {
@@ -15,11 +15,11 @@ export default async function postNamespace(req: FastifyRequest, res: FastifyRep
     const { name, status, service_status, age } = req.body as PostNamespaceProps || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     if (!name || !status || !service_status || !age) {
-        return res.status(400).send({ error: "Missing name, status, service_status or age." })
+        return res.status(400).send({ error: 'Missing name, status, service_status or age.' })
     }
 
     try {
@@ -34,6 +34,6 @@ export default async function postNamespace(req: FastifyRequest, res: FastifyRep
         return res.send({ message: `Successfully added namespace ${name}.` })
     } catch (error) {
         debug({ basic: `Database error in postNamespace: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

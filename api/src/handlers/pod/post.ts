@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
-import tokenWrapper from "#utils/tokenWrapper.ts"
+import run from '#db'
+import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
 type PostPodProps = {
@@ -17,11 +17,11 @@ export default async function postPod(req: FastifyRequest, res: FastifyReply) {
     const { name, ready, status, restarts, age, context, namespace } = req.body as PostPodProps || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     if (!name || !ready || !status || !restarts || !age || !context || !namespace) {
-        return res.status(400).send({ error: "Missing pod name." })
+        return res.status(400).send({ error: 'Missing pod name.' })
     }
 
     try {
@@ -37,6 +37,6 @@ export default async function postPod(req: FastifyRequest, res: FastifyReply) {
         return res.send({ message: `Successfully added pod ${name}.` })
     } catch (error) {
         debug({ basic: `Database error in postPod: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

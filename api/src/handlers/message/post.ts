@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import run from "#db"
-import tokenWrapper from "#utils/tokenWrapper.ts"
+import run from '#db'
+import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
 type PostMessageProps = {
@@ -14,11 +14,11 @@ export default async function postMessage(req: FastifyRequest, res: FastifyReply
     const { title, author, status, content } = req.body as PostMessageProps || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
-        return res.status(400).send({ error: "Unauthorized" })
+        return res.status(400).send({ error: 'Unauthorized' })
     }
 
     if (!title || !author || !status || !content) {
-        return res.status(400).send({ error: "Missing title, author, status or content" })
+        return res.status(400).send({ error: 'Missing title, author, status or content' })
     }
 
     try {
@@ -33,6 +33,6 @@ export default async function postMessage(req: FastifyRequest, res: FastifyReply
         return res.send({ message: `Successfully added message ${title}.` })
     } catch (error) {
         debug({ basic: `Database error in postMessage: ${JSON.stringify(error)}` })
-        return res.status(500).send({ error: "Internal Server Error" })
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }
