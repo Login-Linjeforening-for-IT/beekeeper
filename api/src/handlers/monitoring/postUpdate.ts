@@ -13,7 +13,8 @@ type PostStatusUpdateBody = {
 }
 
 export default async function postStatusUpdate(req: FastifyRequest, res: FastifyReply) {
-    const { id, expectedDown, status, delay, note, timestamp } = req.body as PostStatusUpdateBody || {}
+    const { id } = req.params as { id: string }
+    const { expectedDown, status, delay, note, timestamp } = req.body as PostStatusUpdateBody || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
         return res.status(400).send({ error: 'Unauthorized' })

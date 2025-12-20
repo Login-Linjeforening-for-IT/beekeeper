@@ -60,6 +60,10 @@ import postStatus from './handlers/monitoring/post.ts'
 import getIndex from './handlers/index/getIndex.ts'
 import getHealth from './handlers/index/getHealth.ts'
 import getVersion from './handlers/index/getVersion.ts'
+import postStatusNotification from './handlers/monitoring/postNotification.ts'
+import getStatusNotifications from './handlers/monitoring/getNotifications.ts'
+import deleteStatus from './handlers/monitoring/deleteStatus.ts'
+import deleteStatusNotification from './handlers/monitoring/deleteNotification.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -147,6 +151,10 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
 
     // status
     fastify.get('/monitoring', getStatus)
+    fastify.get('/monitoring/notifications', getStatusNotifications)
     fastify.post('/monitoring', postStatus)
     fastify.post('/monitoring/:id', postStatusUpdate)
+    fastify.post('/monitoring/notification', postStatusNotification)
+    fastify.delete('/monitoring/:id', deleteStatus)
+    fastify.delete('/monitoring/notification/:id', deleteStatusNotification)
 }
