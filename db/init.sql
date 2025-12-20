@@ -208,6 +208,14 @@ CREATE TABLE IF NOT EXISTS status_details (
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Status notifications table
+CREATE TABLE IF NOT EXISTS status_notifications (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    message TEXT,
+    webhook TEXT NOT NULL
+);
+
 -- Indexes for traffic
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_traffic_domain_trgm ON traffic (domain);
