@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS sites (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     ip TEXT NOT NULL,
-    primary BOOLEAN NOT NULL DEFAULT FALSE,
+    "primary" BOOLEAN NOT NULL DEFAULT FALSE,
     operational BOOLEAN NOT NULL DEFAULT FALSE,
     added_by TEXT NOT NULL,
     added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS sites (
 );
 
 -- Indexes for sites
-CREATE UNIQUE INDEX primary_site ON sites ((primary)) WHERE primary = TRUE;
+CREATE UNIQUE INDEX primary_site ON sites ("primary") WHERE "primary" = TRUE;
 
 -- Indexes for traffic
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
@@ -255,10 +255,6 @@ CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_method ON traffic (timestamp DE
 
 -- Heavy operations, more RAM required
 SET maintenance_work_mem = '1GB';
-
--- Index for local log context + namespace combination
-CREATE UNIQUE INDEX local_log_namespace_context_counts_unique_idx
-ON local_log_namespace_context_counts (namespace, context);
 
 -- Indexes to speed up local log refresh query
 CREATE INDEX ON local_log (LOWER(namespace));
