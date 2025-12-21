@@ -216,6 +216,29 @@ CREATE TABLE IF NOT EXISTS status_notifications (
     webhook TEXT NOT NULL
 );
 
+-- Status tags
+CREATE TABLE IF NOT EXISTS status_tags (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    color TEXT NOT NULL
+);
+
+-- Loadbalancing
+CREATE TABLE IF NOT EXISTS sites (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    ip TEXT NOT NULL,
+    primary BOOLEAN NOT NULL DEFAULT FALSE,
+    operational BOOLEAN NOT NULL DEFAULT FALSE,
+    added_by TEXT NOT NULL,
+    added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_by TEXT NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Indexes for sites
+CREATE UNIQUE INDEX primary_site ON sites ((primary)) WHERE primary = TRUE;
+
 -- Indexes for traffic
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp ON traffic (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_traffic_domain_trgm ON traffic (domain);

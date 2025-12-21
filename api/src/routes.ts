@@ -64,6 +64,15 @@ import postStatusNotification from './handlers/monitoring/postNotification.ts'
 import getStatusNotifications from './handlers/monitoring/getNotifications.ts'
 import deleteStatus from './handlers/monitoring/deleteStatus.ts'
 import deleteStatusNotification from './handlers/monitoring/deleteNotification.ts'
+import postTag from './handlers/monitoring/postTag.ts'
+import deleteTag from './handlers/monitoring/deleteTag.ts'
+import getTags from './handlers/monitoring/getTags.ts'
+import deleteSite from './handlers/loadbalancing/deleteSite.ts'
+import getSites from './handlers/loadbalancing/getSites.ts'
+import getPrimarySite from './handlers/loadbalancing/getPrimarySite.ts'
+import setPrimarySite from './handlers/loadbalancing/setPrimarySite.ts'
+import postSite from './handlers/loadbalancing/postSite.ts'
+import putSite from './handlers/loadbalancing/putSite.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -152,9 +161,20 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     // status
     fastify.get('/monitoring', getStatus)
     fastify.get('/monitoring/notifications', getStatusNotifications)
+    fastify.get('/monitoring/tags', getTags)
     fastify.post('/monitoring', postStatus)
     fastify.post('/monitoring/:id', postStatusUpdate)
     fastify.post('/monitoring/notification', postStatusNotification)
+    fastify.post('/monitoring/tag', postTag)
     fastify.delete('/monitoring/:id', deleteStatus)
     fastify.delete('/monitoring/notification/:id', deleteStatusNotification)
+    fastify.delete('/monitoring/tag/:id', deleteTag)
+
+    // loadbalancing
+    fastify.get('/sites', getSites)
+    fastify.get('/site/primary', getPrimarySite)
+    fastify.get('/site/primary/:id', setPrimarySite)
+    fastify.post('/site', postSite)
+    fastify.put('/site/:id', putSite)
+    fastify.delete('/site/:id', deleteSite)
 }

@@ -13,14 +13,13 @@ type PostStatusBody = {
     expectedDown: boolean
     maxConsecutiveFailures: number
     note: string
-    notified: string
     enabled: boolean
 }
 
 export default async function postStatus(req: FastifyRequest, res: FastifyReply) {
     const {
         name, type, url, interval, status, webhookUrl, expectedDown,
-        maxConsecutiveFailures, note, notified, enabled
+        maxConsecutiveFailures, note, enabled
     } = req.body as PostStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
@@ -28,7 +27,7 @@ export default async function postStatus(req: FastifyRequest, res: FastifyReply)
     }
 
     if (!name || !type || !url || !interval || !status || !webhookUrl || 
-        !expectedDown || !maxConsecutiveFailures || !note || !notified || !enabled) {
+        !expectedDown || !maxConsecutiveFailures || !note || !enabled) {
         return res.status(400).send({ error: 'Missing required field.' })
     }
 
@@ -38,14 +37,14 @@ export default async function postStatus(req: FastifyRequest, res: FastifyReply)
             Adding status: name=${name}, type=${type}, url=${url}, 
             interval=${interval}, status=${status}, webhook_url=${webhookUrl}, 
             expected_down=${expectedDown}, max_consecutive_failures=${maxConsecutiveFailures},
-            note=${note}, notified=${notified}, enabled=${enabled}
+            note=${note}, enabled=${enabled}
         ` })
 
         await run(
             `INSERT INTO status (name, type, url, interval, status, webhook_url, expected_down, max_consecutive_failures, note, notified, enabled) 
              SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
              WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1);`,
-            [name, type, url, interval, status, webhookUrl, expectedDown, maxConsecutiveFailures, note, notified, enabled]
+            [name, type, url, interval, status, webhookUrl, expectedDown, maxConsecutiveFailures, note, enabled]
         )
 
         return res.send({ message: `Successfully added context ${name} to contexts.` })
