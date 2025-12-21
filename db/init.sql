@@ -191,7 +191,6 @@ CREATE TABLE IF NOT EXISTS status (
     url TEXT,
     interval INTEGER NOT NULL,
     status BOOLEAN NOT NULL DEFAULT FALSE,
-    webhook_url TEXT,
     expected_down BOOLEAN NOT NULL DEFAULT FALSE,
     max_consecutive_failures INTEGER NOT NULL DEFAULT 0,
     note TEXT,
