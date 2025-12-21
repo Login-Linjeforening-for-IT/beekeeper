@@ -195,6 +195,7 @@ CREATE TABLE IF NOT EXISTS status (
     max_consecutive_failures INTEGER NOT NULL DEFAULT 0,
     note TEXT,
     notified TIMESTAMPTZ,
+    tags INTEGER[] DEFAULT '{}',
     enabled BOOLEAN NOT NULL DEFAULT TRUE
 );
 

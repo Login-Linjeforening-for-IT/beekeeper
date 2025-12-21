@@ -73,6 +73,7 @@ import getPrimarySite from './handlers/loadbalancing/getPrimarySite.ts'
 import setPrimarySite from './handlers/loadbalancing/setPrimarySite.ts'
 import postSite from './handlers/loadbalancing/postSite.ts'
 import putSite from './handlers/loadbalancing/putSite.ts'
+import getService from './handlers/monitoring/getService.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -161,6 +162,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
 
     // status
     fastify.get('/monitoring', getStatus)
+    fastify.get('/monitoring/service/:id', getService)
     fastify.get('/monitoring/notifications', getStatusNotifications)
     fastify.get('/monitoring/tags', getTags)
     fastify.post('/monitoring', { preHandler }, postService)
