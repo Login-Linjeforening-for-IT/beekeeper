@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS status_notifications (
 -- Status tags
 CREATE TABLE IF NOT EXISTS status_tags (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     color TEXT NOT NULL
 );
 

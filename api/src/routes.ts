@@ -156,25 +156,26 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get('/traffic/metrics', { preHandler }, getMetrics)
     fastify.get('/traffic/records', { preHandler }, getRecords)
     fastify.get('/traffic/domains', { preHandler }, getDomains)
+
     fastify.post('/traffic', postTraffic)
 
     // status
     fastify.get('/monitoring', getStatus)
     fastify.get('/monitoring/notifications', getStatusNotifications)
     fastify.get('/monitoring/tags', getTags)
-    fastify.post('/monitoring', postStatus)
-    fastify.post('/monitoring/:id', postStatusUpdate)
-    fastify.post('/monitoring/notification', postStatusNotification)
-    fastify.post('/monitoring/tag', postTag)
-    fastify.delete('/monitoring/:id', deleteStatus)
-    fastify.delete('/monitoring/notification/:id', deleteStatusNotification)
-    fastify.delete('/monitoring/tag/:id', deleteTag)
+    fastify.post('/monitoring', { preHandler }, postStatus)
+    fastify.post('/monitoring/:id', { preHandler }, postStatusUpdate)
+    fastify.post('/monitoring/notification', { preHandler }, postStatusNotification)
+    fastify.post('/monitoring/tag', { preHandler }, postTag)
+    fastify.delete('/monitoring/:id', { preHandler }, deleteStatus)
+    fastify.delete('/monitoring/notification/:id', { preHandler }, deleteStatusNotification)
+    fastify.delete('/monitoring/tag/:id', { preHandler }, deleteTag)
 
     // loadbalancing
     fastify.get('/sites', getSites)
     fastify.get('/site/primary', getPrimarySite)
     fastify.get('/site/primary/:id', setPrimarySite)
-    fastify.post('/site', postSite)
-    fastify.put('/site/:id', putSite)
-    fastify.delete('/site/:id', deleteSite)
+    fastify.post('/site', { preHandler }, postSite)
+    fastify.put('/site/:id', { preHandler }, putSite)
+    fastify.delete('/site/:id', { preHandler }, deleteSite)
 }
