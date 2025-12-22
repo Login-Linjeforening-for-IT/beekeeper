@@ -77,7 +77,9 @@ const config = {
     HEARTBEAT_URL: 'https://status.login.no/api/push/{reference}?status=up&msg=OK&ping={ping}',
     HEARTBEAT_REFERENCE: env.HEARTBEAT_REFERENCE,
     TRAFFIC_SECRET: env.TRAFFIC_SECRET,
-    CACHE_TTL: 60000
+    CACHE_TTL: 60000,
+    MAX_ATTEMPTS: 5,
+    MAX_CONCURRENCY: 5
 }
 
 export default config

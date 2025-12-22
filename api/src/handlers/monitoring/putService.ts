@@ -54,7 +54,7 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
                 max_consecutive_failures = $6,
                 note = $7,
                 enabled = $8,
-                notification = $9
+                notification = $9,
                 user_agent = $11
             WHERE id = $10
             RETURNING id
