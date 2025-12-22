@@ -31,7 +31,7 @@ export default async function postNamespaceNote(req: FastifyRequest, res: Fastif
             [context, namespace, status, message, author]
         )
 
-        return res.send({ message: `Successfully added namespace note to notes.` })
+        return res.send({ message: 'Successfully added namespace note to notes.' })
     } catch (error) {
         debug({ basic: `Database error in postNamespaceNote: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })

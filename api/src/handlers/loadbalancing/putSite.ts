@@ -1,6 +1,16 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { runInTransaction } from '#db'
 
+type PutSiteProps = {
+    name: string
+    ip: string
+    primary: boolean
+    operational: boolean
+    maintenance: boolean
+    note: string
+    updatedBy: string
+}
+
 export default async function putSite(req: FastifyRequest,res: FastifyReply) {
     const { id } = req.params as { id: string }
     const {
@@ -8,13 +18,15 @@ export default async function putSite(req: FastifyRequest,res: FastifyReply) {
         ip,
         primary,
         operational,
-        updated_by
-    } = req.body as any
+        updatedBy,
+        note,
+        maintenance
+    } = req.body as PutSiteProps ?? {}
 
     try {
         const result = await runInTransaction(async (client) => {
             if (primary === true) {
-                await client.query(`UPDATE sites SET primary = FALSE WHERE primary = TRUE;`)
+                await client.query('UPDATE sites SET primary = FALSE WHERE primary = TRUE;')
             }
 
             const updateResult = await client.query(
@@ -27,7 +39,7 @@ export default async function putSite(req: FastifyRequest,res: FastifyReply) {
                     updated_at = NOW()
                 WHERE id = $6
                 RETURNING *;`,
-                [name, ip, primary, operational, updated_by, id]
+                [name, ip, primary, operational, updatedBy, id, note || null, maintenance]
             )
 
             if (updateResult.rowCount === 0) {
@@ -38,10 +50,11 @@ export default async function putSite(req: FastifyRequest,res: FastifyReply) {
         })
 
         return res.send(result)
-    } catch (err: any) {
-        if (err.message === 'SITE_NOT_FOUND') {
+    } catch (error) {
+        if ((error as Error).message === 'SITE_NOT_FOUND') {
             return res.status(404).send({ error: 'Site not found' })
         }
-        throw err
+
+        return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

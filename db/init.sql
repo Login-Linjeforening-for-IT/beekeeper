@@ -236,7 +236,9 @@ CREATE TABLE IF NOT EXISTS sites (
     added_by TEXT NOT NULL,
     added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_by TEXT NOT NULL,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    maintenance BOOLEAN NOT NULL DEFAULT FALSE,
+    note TEXT
 );
 
 -- Indexes for sites

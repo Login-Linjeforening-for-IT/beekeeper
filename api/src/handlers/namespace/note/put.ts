@@ -17,7 +17,7 @@ export default async function putNamespaceNote(req: FastifyRequest, res: Fastify
         return res.status(400).send({ error: 'Missing id, context, namespace, status, message or author' })
     }
 
-    const exists = await run(`SELECT * FROM namespace_notes WHERE id = $1`, [id])
+    const exists = await run('SELECT * FROM namespace_notes WHERE id = $1', [id])
     if (!exists.rows.length) {
         return res.status(404).send({ error: `Note ${id} not found.` })
     }

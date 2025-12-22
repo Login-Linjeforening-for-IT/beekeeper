@@ -17,7 +17,7 @@ export default async function postTag(req: FastifyRequest, res: FastifyReply) {
 
     try {
         debug({ detailed: `Posting tag: name=${name}, color=${color}` })
-        await run(`INSERT INTO status_tags (name, color) VALUES ($1, $2);`, [name, color])
+        await run('INSERT INTO status_tags (name, color) VALUES ($1, $2);', [name, color])
         return res.send({ message: `Successfully added tag ${name} with color ${color}.` })
     } catch (error) {
         debug({ basic: `Database error in postTag: ${JSON.stringify(error)}` })

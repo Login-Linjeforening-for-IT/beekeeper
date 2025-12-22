@@ -35,6 +35,7 @@ export default async function run(query: string, params?: (string | number | nul
                 client.release()
             }
         } catch (error) {
+            console.log(error)
             debug({ basic: `Pool currently unavailable, retrying in ${config.TIMEOUT_MS / 1000}s...` })
             await sleep(config.TIMEOUT_MS)
         }
@@ -44,6 +45,7 @@ export default async function run(query: string, params?: (string | number | nul
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runInTransaction(callback: (client: pg.PoolClient) => Promise<any>) {
     const client = await pool.connect()
+
     try {
         await client.query('BEGIN')
         const result = await callback(client)

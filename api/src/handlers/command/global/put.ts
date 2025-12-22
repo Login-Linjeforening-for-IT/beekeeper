@@ -16,13 +16,18 @@ export default async function putGlobalCommand(req: FastifyRequest, res: Fastify
         return res.status(400).send({ error: 'Missing id, name, command, author or reason.' })
     }
 
-    const exists = await run(`SELECT * FROM global_commands WHERE id = $1`, [id])
+    const exists = await run('SELECT * FROM global_commands WHERE id = $1', [id])
     if (!exists.rows.length) {
         return res.status(404).send({ error: `ID ${id} not found.` })
     }
 
     try {
-        debug({ detailed: `Editing global command: id=${id} name=${name} command=${command}, author=${author}, reason=${reason}` })
+        debug({
+            detailed: `
+                Editing global command: id=${id} name=${name} command=${command}, 
+                author=${author}, reason=${reason}
+            `
+        })
 
         await run(
             `UPDATE global_commands 

@@ -5,7 +5,7 @@ import debug from '#utils/debug.ts'
 const { USER_ENDPOINT, AUTHENTIK_TOKEN } = config
 
 type Data = {
-    results: Array<any>
+    results: Array<object>
 }
 
 export default async function getUser(req: FastifyRequest, res: FastifyReply) {

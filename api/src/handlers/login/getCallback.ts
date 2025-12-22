@@ -16,7 +16,7 @@ type UserInfo = {
  * @param req Request
  * @param res Response
  */
-export default async function getCallback(req: FastifyRequest, res: FastifyReply): Promise<any> {
+export default async function getCallback(req: FastifyRequest, res: FastifyReply): Promise<object> {
     const { code } = req.query as { code: string }
 
     if (!code) {

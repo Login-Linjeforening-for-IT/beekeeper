@@ -7,9 +7,9 @@ export default async function tokenWrapper(req: FastifyRequest, res: FastifyRepl
     const authHeader = req.headers['authorization']
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return { 
-            valid: false, 
-            error: 'Missing or invalid Authorization header' 
+        return {
+            valid: false,
+            error: 'Missing or invalid Authorization header'
         }
     }
 

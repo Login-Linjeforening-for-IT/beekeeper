@@ -30,7 +30,7 @@ export default async function getLog(this: FastifyInstance, req: FastifyRequest,
     if (log !== 'local' && log !== 'global' || (log === 'local' && (!namespace || !context))) {
         const missingVars = !namespace || !context
         const simple = 'Missing context or namespace. This is a local log. Context and namespace is expected.'
-        const advanced = `Invalid log parameter (log !== 'local' && log !== 'global' || (log === 'local' && (!namespace || !context)))`
+        const advanced = 'Invalid log parameter (log !== \'local\' && log !== \'global\' || (log === \'local\' && (!namespace || !context)))'
         const error = missingVars ? simple : advanced
         return res.send({
             page,
@@ -41,7 +41,6 @@ export default async function getLog(this: FastifyInstance, req: FastifyRequest,
     }
 
     try {
-        let shouldBeCached = false
         const formattedContext = await getContext(context ?? 'prod')
         const isLocal = log === 'local'
         const logQueryFile = isLocal
@@ -64,12 +63,6 @@ export default async function getLog(this: FastifyInstance, req: FastifyRequest,
                 ? [namespace, search || null, formattedContext]
                 : [namespace, formattedContext]
             : [search || null]
-        const indexedPage = Page - 1
-        const pageIsCached = resultsPerPage === 50
-            ? indexedPage < 10
-            : resultsPerPage === 100
-                ? indexedPage < 5
-                : indexedPage < 20
 
         const logQuery = (await loadSQL(logQueryFile))
         const logCountQuery = (await loadSQL(logCountQueryFile))

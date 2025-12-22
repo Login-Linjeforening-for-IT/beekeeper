@@ -28,14 +28,21 @@ type DetailedService = {
 }
 
 export default async function monitor() {
-    const uncheckedResult = await run(`SELECT * FROM status WHERE type = 'fetch' AND enabled = TRUE`)
+    const uncheckedResult = await run('SELECT * FROM status WHERE type = \'fetch\' AND enabled = TRUE')
     const uncheckedServices = uncheckedResult.rows as DetailedService[]
     await runInParallel(uncheckedServices, async (service) => {
-        const check = await recheck(service)
-        await run(`
-            INSERT INTO status_details (service_id, status, expected_down, delay, note)
-            VALUES ($1, $2, $3, $4, $5)
-        `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
+        if (
+            !Array.isArray(service.bars)
+            || !service.bars.length
+            || (new Date().getTime() - new Date(service.bars[0].timestamp).getTime() > service.interval * 1000)
+        ) {
+            const check = await recheck(service)
+
+            await run(`
+                INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                VALUES ($1, $2, $3, $4, $5)
+            `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
+        }
     })
 
     const query = await loadSQL('fetchServiceStatus.sql')
@@ -46,17 +53,32 @@ export default async function monitor() {
             continue
         }
 
-        if (!service.status && !service.max_consecutive_failures && !service.notified) {
+        if (!service.bars[0].status && !service.max_consecutive_failures && !service.notified) {
             await notify(service)
-            await run(`UPDATE status SET notified = NOW() WHERE id = $1`, [service.service_id])
+            await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.service_id])
         }
 
-        if (service.status && service.notified) {
+        if (service.bars[0].status && service.notified) {
             await notify(service)
-            await run(`UPDATE status SET notified = NULL WHERE id = $1`, [service.service_id])
+            await run('UPDATE status SET notified = NULL WHERE id = $1', [service.service_id])
         }
 
-        // handle advanced case with consecutive failures (notify down)
+        if (!service.notified && service.max_consecutive_failures > 0) {
+            const recentBars = service.bars.slice(0, service.max_consecutive_failures)
+            let downCount = 0
+            for (const bar of recentBars) {
+                if (!bar.status) {
+                    downCount++
+                } else {
+                    break
+                }
+            }
+
+            if (downCount >= service.max_consecutive_failures) {
+                await notify(service)
+                await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.service_id])
+            }
+        }
     }
 }
 
@@ -65,6 +87,7 @@ async function recheck(service: DetailedService): Promise<{ status: boolean, del
 
     for (let i = 0; i < config.MAX_ATTEMPTS; i++) {
         const check = await fetchService(service)
+
         if (check.status) {
             return {
                 status: check.status,

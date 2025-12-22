@@ -110,6 +110,6 @@
   },
   "include": [
     "src",
-    "utils"
+    "utils"  
   ]
 }

@@ -18,7 +18,7 @@ export default async function putLocalCommand(req: FastifyRequest, res: FastifyR
         return res.status(400).send({ error: 'Missing id, context, name, namespace, command, author or reason.' })
     }
 
-    const exists = await run(`SELECT * FROM local_commands WHERE id = $1`, [id])
+    const exists = await run('SELECT * FROM local_commands WHERE id = $1', [id])
     if (!exists.rows.length) {
         return res.status(404).send({ error: `ID ${id} not found.` })
     }

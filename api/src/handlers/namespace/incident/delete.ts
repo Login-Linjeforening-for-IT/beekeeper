@@ -11,7 +11,7 @@ export default async function deleteNamespaceIncident(req: FastifyRequest, res: 
     }
 
     try {
-        const result = await run(`DELETE FROM namespace_incidents WHERE id = $1`, [id])
+        const result = await run('DELETE FROM namespace_incidents WHERE id = $1', [id])
 
         return res.send(result.rows)
     } catch (error) {

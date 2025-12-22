@@ -5,7 +5,7 @@ const { CRITICAL_ROLE, WEBHOOK_URL } = config
 
 export default async function discordAlert(description: string) {
     try {
-        let data: { content?: string; embeds: any[] } = {
+        const data: { content?: string; embeds: object[] } = {
             embeds: [
                 {
                     title: '🐝 BeeKeeper BTG Login 🐝',
@@ -34,6 +34,6 @@ export default async function discordAlert(description: string) {
 
         return response.status
     } catch (error) {
-        debug({ basic: error })
+        debug({ basic: (error as Error) })
     }
 }

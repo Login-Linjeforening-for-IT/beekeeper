@@ -16,7 +16,7 @@ export default async function putMessage(req: FastifyRequest, res: FastifyReply)
         return res.status(400).send({ error: 'Missing id, title, author, status or content' })
     }
 
-    const exists = await run(`SELECT * FROM messages WHERE id = $1`, [id])
+    const exists = await run('SELECT * FROM messages WHERE id = $1', [id])
     if (!exists.rows.length) {
         return res.status(404).send({ error: `Message ${id} not found.` })
     }

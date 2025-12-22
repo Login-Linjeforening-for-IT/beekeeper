@@ -1,4 +1,4 @@
-import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import type { FastifyInstance } from 'fastify'
 
 import preHandler from '#utils/authMiddleware.ts'
 
@@ -76,7 +76,7 @@ import putSite from './handlers/loadbalancing/putSite.ts'
 import getService from './handlers/monitoring/getService.ts'
 import putService from './handlers/monitoring/putService.ts'
 
-export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
+export default async function apiRoutes(fastify: FastifyInstance) {
     // index
     fastify.get('/', getIndex)
     fastify.get('/health', getHealth)
@@ -116,7 +116,7 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.post('/log/global', postGlobalLog)
     fastify.post('/log/local', postLocalLog)
 
-    // command 
+    // command
     fastify.get('/commands/local', getLocalCommands)
     fastify.get('/commands/global', getGlobalCommands)
 

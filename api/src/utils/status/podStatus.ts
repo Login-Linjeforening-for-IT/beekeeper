@@ -17,7 +17,7 @@ type PodGroup = {
 }
 
 export default async function podStatus(namespace: string, context: 'prod' | 'dev' = 'prod') {
-    const podsResult = await run(`SELECT * FROM pods ORDER BY name ASC`)
+    const podsResult = await run('SELECT * FROM pods ORDER BY name ASC')
     const allPods = podsResult.rows
     const pods = namespace !== 'global' ? allPods.filter((pod) => pod.context.includes(context) && pod.namespace === namespace) : []
     const labels = new Set()

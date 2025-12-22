@@ -6,7 +6,7 @@ export default async function getNamespaceNotes(req: FastifyRequest, res: Fastif
     const { context, namespace } = req.params as { context: string, namespace: string }
     try {
         const result = await run(
-            `SELECT * FROM namespace_notes WHERE context = $1 AND namespace = $2 ORDER BY timestamp DESC`,
+            'SELECT * FROM namespace_notes WHERE context = $1 AND namespace = $2 ORDER BY timestamp DESC',
             [context, namespace]
         )
 

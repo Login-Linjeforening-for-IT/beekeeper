@@ -17,7 +17,7 @@ export default async function putNamespaceIncident(req: FastifyRequest, res: Fas
         return res.status(400).send({ error: 'Missing id, name, url, context or namespace.' })
     }
 
-    const exists = await run(`SELECT * FROM namespace_incidents WHERE id = $1`, [id])
+    const exists = await run('SELECT * FROM namespace_incidents WHERE id = $1', [id])
     if (!exists.rows.length) {
         return res.status(404).send({ error: `Incident ${id} not found.` })
     }

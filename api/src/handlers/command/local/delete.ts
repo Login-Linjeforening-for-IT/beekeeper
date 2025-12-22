@@ -11,7 +11,7 @@ export default async function deleteLocalCommand(req: FastifyRequest, res: Fasti
     }
 
     try {
-        const result = await run(`DELETE FROM local_commands WHERE id = $1`, [id])
+        const result = await run('DELETE FROM local_commands WHERE id = $1', [id])
 
         return res.send(result.rows)
     } catch (error) {

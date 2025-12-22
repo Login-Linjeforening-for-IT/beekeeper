@@ -8,10 +8,10 @@ export const Debug = {
 }
 
 type Log = {
-    production?: { message: string, error: any }
-    basic?: any
-    detailed?: string | { message: string, data?: any }
-    full?: string | { message: string, data?: any }
+    production?: { message: string, error: object }
+    basic?: object | string
+    detailed?: string | { message: string, data?: object }
+    full?: string | { message: string, data?: object }
 }
 
 export default function debug({ basic: Basic, detailed: Detailed, full: Full, production: Production }: Log) {

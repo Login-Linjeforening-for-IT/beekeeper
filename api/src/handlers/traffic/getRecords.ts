@@ -56,6 +56,7 @@ export default async function getRecords(req: FastifyRequest, res: FastifyReply)
         return res.status(200).send({ result: result.rows, total: totalCount })
 
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

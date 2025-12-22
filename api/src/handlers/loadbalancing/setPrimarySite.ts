@@ -6,7 +6,7 @@ export default async function setPrimarySite(req: FastifyRequest, res: FastifyRe
 
     try {
         const result = await runInTransaction(async (client) => {
-            await client.query(`UPDATE sites SET primary = FALSE WHERE primary = TRUE;`)
+            await client.query('UPDATE sites SET primary = FALSE WHERE primary = TRUE;')
 
             const updateResult = await client.query(
                 `UPDATE sites
@@ -24,8 +24,8 @@ export default async function setPrimarySite(req: FastifyRequest, res: FastifyRe
         })
 
         return res.send(result)
-    } catch (error: any) {
-        if (error.message === '404') {
+    } catch (error) {
+        if ((error as Error).message === '404') {
             return res.status(404).send({ error: 'Site not found' })
         }
 

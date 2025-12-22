@@ -1,14 +1,13 @@
 import debug from '#utils/debug.ts'
-import smallDate from './smallDate.ts'
 
 export default async function notify(service: CheckedServiceStatus) {
     try {
-        let data: { content?: string; embeds: any[] } = {
+        const data: { content?: string; embeds: object[] } = {
             embeds: [
                 {
-                    title: `🐝 ${service.name} ${service.status ? 'is up.' : 'went down!'}`,
+                    title: `🐝 ${service.name} ${service.bars[0].status ? 'is up.' : 'went down!'}`,
                     description: `**Service Name**\n${service.name}\n\n**Service URL**\n${service.url}\n\n**Service Type**\n${service.type}`,
-                    color: service.status ? 0x48a860 : 0xff0000,
+                    color: service.bars[0].status ? 0x48a860 : 0xff0000,
                     timestamp: new Date().toISOString(),
                     footer: {
                         text: `Ping ${service.delay}ms`
@@ -35,6 +34,6 @@ export default async function notify(service: CheckedServiceStatus) {
 
         return response.status
     } catch (error) {
-        debug({ basic: error })
+        debug({ basic: (error as Error) })
     }
 }

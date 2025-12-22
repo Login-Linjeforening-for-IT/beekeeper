@@ -11,7 +11,7 @@ export default async function deleteMessage(req: FastifyRequest, res: FastifyRep
     }
 
     try {
-        const result = await run(`DELETE FROM messages WHERE id = $1`, [id])
+        const result = await run('DELETE FROM messages WHERE id = $1', [id])
 
         return res.send(result.rows)
     } catch (error) {

@@ -11,7 +11,7 @@ export default async function deleteNamespaceNote(req: FastifyRequest, res: Fast
     }
 
     try {
-        const result = await run(`DELETE FROM namespace_notes WHERE id = $1`, [id])
+        const result = await run('DELETE FROM namespace_notes WHERE id = $1', [id])
 
         return res.send(result.rows)
     } catch (error) {

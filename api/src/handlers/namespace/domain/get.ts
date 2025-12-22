@@ -6,7 +6,7 @@ export default async function getNamespaceDomains(req: FastifyRequest, res: Fast
     const { context } = req.params as { context: string }
     try {
         const result = await run(
-            `SELECT * FROM namespace_domains WHERE context = $1 ORDER BY name;`,
+            'SELECT * FROM namespace_domains WHERE context = $1 ORDER BY name;',
             [context]
         )
 

@@ -17,20 +17,20 @@ export default async function runCommand(req: FastifyRequest, res: FastifyReply)
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    let command = `echo 'Command not found'`
+    let command = 'echo \'Command not found\''
     if (!type || !id) {
         return res.status(400).send({ error: 'Missing id or type.' })
     }
 
     if (type === 'local') {
-        const local = await run(`SELECT * FROM local_commands WHERE id = $1`, [id])
+        const local = await run('SELECT * FROM local_commands WHERE id = $1', [id])
         if (!local.rowCount) {
             return res.status(400).send({ error: 'Invalid command.' })
         } else {
             command = local.rows[0].command
         }
     } else {
-        const global = await run(`SELECT * FROM global_commands WHERE id = $1`, [id])
+        const global = await run('SELECT * FROM global_commands WHERE id = $1', [id])
         if (!global.rowCount) {
             return res.status(400).send({ error: 'Invalid command.' })
         } else {

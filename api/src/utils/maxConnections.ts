@@ -10,7 +10,7 @@ export default function checkMaxConnectionsCron() {
 
 async function checkMaxConnections() {
     try {
-        const result = await run(`SELECT count(*) FROM pg_stat_activity WHERE state='active';`)
+        const result = await run('SELECT count(*) FROM pg_stat_activity WHERE state=\'active\';')
         const active = Number(result.rows[0].count)
         const maxRes = await run('SHOW max_connections;')
         const maxConnections = Number(maxRes.rows[0].max_connections)
@@ -20,10 +20,10 @@ async function checkMaxConnections() {
         if (active > THRESHOLD && config.WEBHOOK_URL) {
             console.warn(`Active connections ${active} > ${THRESHOLD}, sending Discord alert...`)
 
-            let data: { content?: string; embeds: any[] } = {
+            const data: { content?: string; embeds: object[] } = {
                 embeds: [
                     {
-                        title: `🐝 BeeKeeper Database Max Connections 🐝`,
+                        title: '🐝 BeeKeeper Database Max Connections 🐝',
                         description: `🐝 Many connections detected: ${active.toFixed(2)}/${THRESHOLD}.`,
                         color: 0xff0000,
                         timestamp: new Date().toISOString()

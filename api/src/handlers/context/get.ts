@@ -4,7 +4,7 @@ import debug from '#utils/debug.ts'
 
 export default async function getContexts(_: FastifyRequest, res: FastifyReply) {
     try {
-        const result = await run(`SELECT * FROM contexts ORDER BY name;`)
+        const result = await run('SELECT * FROM contexts ORDER BY name;')
 
         return res.send(result.rows)
     } catch (error) {

@@ -4,7 +4,7 @@ import debug from '#utils/debug.ts'
 
 export default async function getGlobalCommands(_: FastifyRequest, res: FastifyReply) {
     try {
-        const commands = await run(`SELECT * FROM global_commands`)
+        const commands = await run('SELECT * FROM global_commands')
 
         return res.send(commands.rows)
     } catch (error) {

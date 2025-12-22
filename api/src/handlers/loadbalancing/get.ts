@@ -4,7 +4,7 @@ import debug from '#utils/debug.ts'
 
 export default async function getStatus(_: FastifyRequest, res: FastifyReply) {
     try {
-        const result = await run(`SELECT * FROM status ORDER BY name;`)
+        const result = await run('SELECT * FROM status ORDER BY name;')
         return res.send(result.rows)
     } catch (error) {
         debug({ basic: `Database error in getStatus: ${JSON.stringify(error)}` })

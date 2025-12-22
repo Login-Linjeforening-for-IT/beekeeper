@@ -137,6 +137,7 @@ export default async function getMetrics(req: FastifyRequest, res: FastifyReply)
         return res.status(200).send(result.rows[0])
 
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

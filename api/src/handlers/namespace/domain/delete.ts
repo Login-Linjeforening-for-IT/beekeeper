@@ -11,7 +11,7 @@ export default async function deleteNamespaceDomain(req: FastifyRequest, res: Fa
     }
 
     try {
-        const result = await run(`DELETE FROM namespace_domains WHERE id = $1`, [id])
+        const result = await run('DELETE FROM namespace_domains WHERE id = $1', [id])
 
         return res.send(result.rows)
     } catch (error) {
