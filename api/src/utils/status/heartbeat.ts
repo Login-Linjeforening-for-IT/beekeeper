@@ -44,7 +44,6 @@ export default async function monitor() {
             return
         }
 
-        console.log(!service.status, !service.max_consecutive_failures, !service.notified)
         if (!service.status && !service.max_consecutive_failures && !service.notified) {
             await notify(service)
             await run(`UPDATE status SET notified = NOW() WHERE id = $1`, [service.service_id])
