@@ -3,7 +3,7 @@ import run from '#db'
 import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
 
-type PostStatusBody = {
+type PutStatusBody = {
     name: string
     type: 'fetch' | 'post'
     url: string
@@ -16,11 +16,12 @@ type PostStatusBody = {
     notification?: number
 }
 
-export default async function postService(req: FastifyRequest, res: FastifyReply) {
+export default async function putService(req: FastifyRequest, res: FastifyReply) {
+    const { id } = req.params as { id: string }
     const {
         name, type, url, interval, expectedDown,
         maxConsecutiveFailures, note, enabled, notification
-    } = req.body as PostStatusBody || {}
+    } = req.body as PutStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
     if (!valid) {
         return res.status(400).send({ error: 'Unauthorized' })
@@ -34,22 +35,41 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
     try {
         debug({
             detailed: `
-            Adding service: name=${name}, type=${type}, url=${url}, 
+            Updating service: id=${id}, name=${name}, type=${type}, url=${url}, 
             interval=${interval}, expected_down=${expectedDown}, 
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
             enabled=${enabled}, notification=${notification}
         ` })
 
-        await run(
-            `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification) 
-             SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9
-             WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1);`,
-            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note, enabled, notification || null]
+        const result = await run(
+            `
+            UPDATE status
+            SET
+                name = $1,
+                type = $2,
+                url = $3,
+                interval = $4,
+                expected_down = $5,
+                max_consecutive_failures = $6,
+                note = $7,
+                enabled = $8,
+                notification = $9
+            WHERE id = $10
+            RETURNING id
+            `,
+            [
+                name, type, url, interval, expectedDown, maxConsecutiveFailures,
+                note, enabled, notification || null, id
+            ]
         )
 
-        return res.send({ message: `Successfully added service ${name} to monitoring.` })
+        if (result.rowCount === 0) {
+            return res.status(404).send({ error: 'Service not found.' })
+        }
+
+        return res.send({ message: `Successfully updated service ${name} (${id}).` })
     } catch (error) {
-        debug({ basic: `Database error in postService: ${JSON.stringify(error)}` })
+        debug({ basic: `Database error in putService: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

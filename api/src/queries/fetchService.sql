@@ -2,6 +2,7 @@ SELECT
     s.id,
     s.name,
     s.enabled,
+    s.max_consecutive_failures as "maxConsecutiveFailures",
     COALESCE(bars.bars, '[]'::json) AS bars,
     CASE
         WHEN bars.total = 0 THEN 0
@@ -20,6 +21,7 @@ LEFT JOIN LATERAL (
                 'status', status,
                 'delay', delay,
                 'expectedDown', expected_down,
+                'note', note,
                 'timestamp', timestamp
             )
             ORDER BY timestamp DESC
@@ -27,7 +29,7 @@ LEFT JOIN LATERAL (
     FROM (
         SELECT *
         FROM status_details sd
-        WHERE sd.id = s.id
+        WHERE sd.service_id = s.id
         ORDER BY timestamp DESC
         LIMIT 20
     ) last20

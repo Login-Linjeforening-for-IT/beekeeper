@@ -74,6 +74,7 @@ import setPrimarySite from './handlers/loadbalancing/setPrimarySite.ts'
 import postSite from './handlers/loadbalancing/postSite.ts'
 import putSite from './handlers/loadbalancing/putSite.ts'
 import getService from './handlers/monitoring/getService.ts'
+import putService from './handlers/monitoring/putService.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPluginOptions) {
     // index
@@ -162,13 +163,17 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
 
     // status
     fastify.get('/monitoring', getStatus)
-    fastify.get('/monitoring/service/:id', getService)
+    fastify.get('/monitoring/:id', getService)
     fastify.get('/monitoring/notifications', getStatusNotifications)
     fastify.get('/monitoring/tags', getTags)
+
     fastify.post('/monitoring', { preHandler }, postService)
     fastify.post('/monitoring/:id', { preHandler }, postStatusUpdate)
     fastify.post('/monitoring/notification', { preHandler }, postStatusNotification)
     fastify.post('/monitoring/tag', { preHandler }, postTag)
+
+    fastify.put('/monitoring/:id', { preHandler }, putService)
+
     fastify.delete('/monitoring/:id', { preHandler }, deleteStatus)
     fastify.delete('/monitoring/notification/:id', { preHandler }, deleteStatusNotification)
     fastify.delete('/monitoring/tag/:id', { preHandler }, deleteTag)
@@ -177,7 +182,10 @@ export default async function apiRoutes(fastify: FastifyInstance, _: FastifyPlug
     fastify.get('/sites', getSites)
     fastify.get('/site/primary', getPrimarySite)
     fastify.get('/site/primary/:id', setPrimarySite)
+
     fastify.post('/site', { preHandler }, postSite)
+
     fastify.put('/site/:id', { preHandler }, putSite)
+
     fastify.delete('/site/:id', { preHandler }, deleteSite)
 }

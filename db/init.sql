@@ -189,6 +189,7 @@ CREATE TABLE IF NOT EXISTS status (
     name TEXT NOT NULL,
     type TEXT NOT NULL CHECK (type IN ('fetch', 'post')),
     url TEXT,
+    notification INTEGER,
     interval INTEGER NOT NULL,
     status BOOLEAN NOT NULL DEFAULT FALSE,
     expected_down BOOLEAN NOT NULL DEFAULT FALSE,
@@ -200,7 +201,8 @@ CREATE TABLE IF NOT EXISTS status (
 );
 
 CREATE TABLE IF NOT EXISTS status_details (
-    id INTEGER PRIMARY KEY REFERENCES status(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    service_id INTEGER REFERENCES status(id) ON DELETE CASCADE,
     expected_down BOOLEAN NOT NULL DEFAULT FALSE,
     status BOOLEAN NOT NULL DEFAULT FALSE,
     delay INTEGER NOT NULL DEFAULT 0,
