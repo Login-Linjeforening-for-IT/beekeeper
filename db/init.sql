@@ -193,6 +193,7 @@ CREATE TABLE IF NOT EXISTS status (
     interval INTEGER NOT NULL,
     status BOOLEAN NOT NULL DEFAULT FALSE,
     expected_down BOOLEAN NOT NULL DEFAULT FALSE,
+    user_agent TEXT,
     max_consecutive_failures INTEGER NOT NULL DEFAULT 0,
     note TEXT,
     notified TIMESTAMPTZ,

@@ -14,12 +14,13 @@ type PutStatusBody = {
     note: string
     enabled: boolean
     notification?: number
+    userAgent?: string
 }
 
 export default async function putService(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     const {
-        name, type, url, interval, expectedDown,
+        name, type, url, interval, expectedDown, userAgent,
         maxConsecutiveFailures, note, enabled, notification
     } = req.body as PutStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
@@ -38,7 +39,7 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
             Updating service: id=${id}, name=${name}, type=${type}, url=${url}, 
             interval=${interval}, expected_down=${expectedDown}, 
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
-            enabled=${enabled}, notification=${notification}
+            enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
 
         const result = await run(
@@ -54,12 +55,13 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
                 note = $7,
                 enabled = $8,
                 notification = $9
+                user_agent = $11
             WHERE id = $10
             RETURNING id
             `,
             [
                 name, type, url, interval, expectedDown, maxConsecutiveFailures,
-                note, enabled, notification || null, id
+                note, enabled, notification || null, id, userAgent || null
             ]
         )
 

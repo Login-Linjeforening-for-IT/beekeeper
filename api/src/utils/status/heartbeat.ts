@@ -20,6 +20,7 @@ type DetailedService = {
     url: string
     status: boolean
     expected_down: boolean
+    user_agent: string | null
     interval: number
     note: string
     max_consecutive_failures: number
@@ -64,8 +65,15 @@ async function fetchService(service: DetailedService): Promise<{ status: boolean
     const timeout = setTimeout(() => controller.abort(), 3000)
 
     try {
+        const headers: HeadersInit = {}
+
+        if (service.user_agent) {
+            headers['User-Agent'] = service.user_agent
+        }
+
         const response = await fetch(service.url, {
-            signal: controller.signal
+            signal: controller.signal,
+            headers
         })
 
         if (!response.ok) {

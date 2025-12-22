@@ -10,6 +10,7 @@ type PostStatusBody = {
     interval: number
     status: boolean
     expectedDown: boolean
+    userAgent?: string
     maxConsecutiveFailures: number
     note: string
     enabled: boolean
@@ -18,7 +19,7 @@ type PostStatusBody = {
 
 export default async function postService(req: FastifyRequest, res: FastifyReply) {
     const {
-        name, type, url, interval, expectedDown,
+        name, type, url, interval, expectedDown, userAgent,
         maxConsecutiveFailures, note, enabled, notification
     } = req.body as PostStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
@@ -37,14 +38,14 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
             Adding service: name=${name}, type=${type}, url=${url}, 
             interval=${interval}, expected_down=${expectedDown}, 
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
-            enabled=${enabled}, notification=${notification}
+            enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
 
         await run(
-            `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification) 
-             SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9
+            `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification, user_agent) 
+             SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
              WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1);`,
-            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note, enabled, notification || null]
+            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note, enabled, notification || null, userAgent || null]
         )
 
         return res.send({ message: `Successfully added service ${name} to monitoring.` })
