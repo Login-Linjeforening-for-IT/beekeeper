@@ -55,15 +55,17 @@ export default async function monitor() {
 
         if (!service.bars[0].status && !service.max_consecutive_failures && !service.notified) {
             await notify(service)
-            await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.service_id])
+            await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.id])
+            continue
         }
 
         if (service.bars[0].status && service.notified) {
             await notify(service)
-            await run('UPDATE status SET notified = NULL WHERE id = $1', [service.service_id])
+            await run('UPDATE status SET notified = NULL WHERE id = $1', [service.id])
+            continue
         }
 
-        if (!service.notified && service.max_consecutive_failures > 0) {
+        if (!service.notified && service.max_consecutive_failures > 0 && !service.bars[0].status) {
             const recentBars = service.bars.slice(0, service.max_consecutive_failures)
             let downCount = 0
             for (const bar of recentBars) {
@@ -76,8 +78,10 @@ export default async function monitor() {
 
             if (downCount >= service.max_consecutive_failures) {
                 await notify(service)
-                await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.service_id])
+                await run('UPDATE status SET notified = NOW() WHERE id = $1', [service.id])
             }
+
+            continue
         }
     }
 }
