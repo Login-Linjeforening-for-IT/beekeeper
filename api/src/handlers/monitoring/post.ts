@@ -28,7 +28,7 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
     }
 
     if (!name || !type || !url || !interval || typeof expectedDown !== 'boolean'
-        || typeof maxConsecutiveFailures !== 'number' || !note || typeof enabled !== 'boolean') {
+        || typeof maxConsecutiveFailures !== 'number' || typeof enabled !== 'boolean') {
         return res.status(400).send({ error: 'Missing required field.' })
     }
 
@@ -46,7 +46,7 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
              SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
              WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1)
              RETURNING id, name;`,
-            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note, enabled, notification || null, userAgent || null]
+            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note || null, enabled, notification || null, userAgent || null]
         )
 
         if (!result.rowCount) {
