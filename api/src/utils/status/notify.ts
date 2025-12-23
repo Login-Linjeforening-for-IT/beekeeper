@@ -1,6 +1,7 @@
 import debug from '#utils/debug.ts'
 
 export default async function notify(service: CheckedServiceStatus) {
+    const delay = Array.isArray(service.bars) && service.bars.length ? service.bars[0].delay : 0
     try {
         const data: { content?: string; embeds: object[] } = {
             embeds: [
@@ -10,7 +11,7 @@ export default async function notify(service: CheckedServiceStatus) {
                     color: service.bars[0].status ? 0x48a860 : 0xff0000,
                     timestamp: new Date().toISOString(),
                     footer: {
-                        text: `Ping ${service.delay}ms`
+                        text: `Ping ${delay}ms`
                     }
                 }
             ]

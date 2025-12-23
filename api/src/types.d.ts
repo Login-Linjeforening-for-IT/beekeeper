@@ -144,13 +144,19 @@ type CheckedServiceStatus = {
     tags: Tag[]
     enabled: boolean
     service_id: number
-    delay: number
-    timestamp: string
     notification_id: null | number
     notification_name: null | string
     notification_message: null | string
     notification_webhook: null | string
     bars: Bar[]
+}
+
+type Bar = {
+    status: boolean
+    delay: number
+    expectedDown: boolean
+    timestamp: string
+    note: string
 }
 
 type MonitoredService = {

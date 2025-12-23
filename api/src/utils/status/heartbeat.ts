@@ -28,9 +28,20 @@ type DetailedService = {
 }
 
 export default async function monitor() {
-    const uncheckedResult = await run('SELECT * FROM status WHERE type = \'fetch\' AND enabled = TRUE')
-    const uncheckedServices = uncheckedResult.rows as DetailedService[]
-    await runInParallel(uncheckedServices, async (service) => {
+    const servicesQuery = await loadSQL('fetchServicesWithBars.sql')
+    const servicesResult = await run(servicesQuery)
+    const active: (DetailedService & { bars: Bar[] })[] = []
+    const passive: (DetailedService & { bars: Bar[] })[] = []
+
+    for (const row of servicesResult.rows as (DetailedService & { bars: Bar[] })[]) {
+        if (row.type === 'fetch') {
+            active.push(row)
+        } else {
+            passive.push(row)
+        }
+    }
+
+    await runInParallel(active, async (service) => {
         if (
             !Array.isArray(service.bars)
             || !service.bars.length
@@ -45,9 +56,25 @@ export default async function monitor() {
         }
     })
 
+    await runInParallel(passive, async (service) => {
+        const oneMinuteAgo = new Date(Date.now() - 60 * 1000)
+        if (!service.bars.length) {
+            await run(`
+                INSERT INTO status_details (service_id, status, expected_down, delay, note, timestamp)
+                VALUES ($1, $2, $3, $4, $5, $6)
+            `, [service.id, false, service.expected_down, 0, service.note ?? null, oneMinuteAgo.toISOString()])
+
+            await run(`
+                INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                VALUES ($1, $2, $3, $4, $5)
+            `, [service.id, false, service.expected_down, 0, service.note ?? null])
+        }
+    })
+
     const query = await loadSQL('fetchServiceStatus.sql')
     const result = await run(query)
     const services: CheckedServiceStatus[] = result.rows
+
     for (const service of services) {
         if (!service.notification_webhook) {
             continue

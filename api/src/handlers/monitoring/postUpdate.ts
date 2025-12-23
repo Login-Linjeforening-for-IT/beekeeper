@@ -1,43 +1,37 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
-import tokenWrapper from '#utils/tokenWrapper.ts'
 import debug from '#utils/debug.ts'
-
-type PostStatusUpdateBody = {
-    id: number
-    expectedDown: boolean
-    status: boolean
-    delay: number
-    note: string
-    timestamp: string
-}
+import { loadSQL } from '#utils/loadSQL.ts'
+import roundToNearestMinute from '#utils/status/roundToNearestMinute.ts'
 
 export default async function postStatusUpdate(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
-    const { expectedDown, status, delay, note, timestamp } = req.body as PostStatusUpdateBody || {}
-    const { valid } = await tokenWrapper(req, res)
-    if (!valid) {
-        return res.status(400).send({ error: 'Unauthorized' })
-    }
-
-    if (!id || typeof expectedDown !== 'boolean' || !status || !delay || !note || !timestamp) {
-        return res.status(400).send({ error: 'Missing required field.' })
-    }
+    const { delay } = req.query as { delay?: string }
 
     try {
-        debug({
-            detailed: `
-            Posting status: id=${id}, expectedDown=${expectedDown}, status=${status}, 
-            delay=${delay}, note=${note}, timestamp=${timestamp}
-        ` })
+        const query = await loadSQL('fetchServiceWithBars.sql')
+        const result = await run(query, [id])
+        if (!result) {
+            return res.status(404).send({ error: 'Service not found.' })
+        }
 
+        const timestamp = roundToNearestMinute(new Date())
+        const service = result.rows[0]
         await run(
-            `INSERT INTO status_details (id, expected_down, status, delay, note, timestamp) 
-             SELECT $1, $2, $3, $4, $5, $6;`,
-            [id, expectedDown, status, delay, note, timestamp]
+            `INSERT INTO status_details (service_id, expected_down, status, delay, note, timestamp)
+            SELECT $1, $2, $3, $4, $5, $6
+            WHERE NOT EXISTS (
+                SELECT 1 FROM status_details
+                WHERE service_id = $1 AND timestamp = $6
+            )`,
+            [id, service.expected_down, true, delay ? Number(delay) : 0, service.note, timestamp]
         )
 
-        return res.send({ message: `Successfully updated status to ${status ? 'up' : 'down'} for id ${id}.` })
+        return res.send({
+            message: 'Status recieved.',
+            id: Number(id),
+            delay: !isNaN(Number(delay)) ? Number(delay) : 0
+        })
     } catch (error) {
         debug({ basic: `Database error in postUpdate: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
