@@ -41,14 +41,22 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
             enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
 
-        await run(
+        const result = await run(
             `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification, user_agent) 
              SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-             WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1);`,
+             WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1)
+             RETURNING id, name;`,
             [name, type, url, interval, expectedDown, maxConsecutiveFailures, note, enabled, notification || null, userAgent || null]
         )
 
-        return res.send({ message: `Successfully added service ${name} to monitoring.` })
+        if (!result.rowCount) {
+            return res.status(409).send({ error: 'Service already exists. Update the existing one instead' })
+        }
+
+        return res.send({
+            message: `Successfully added service ${name} to monitoring.`,
+            ...result.rows[0]
+        })
     } catch (error) {
         debug({ basic: `Database error in postService: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
