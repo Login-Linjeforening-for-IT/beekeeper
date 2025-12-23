@@ -168,7 +168,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/monitoring/tags', getTags)
 
     fastify.post('/monitoring', { preHandler }, postService)
-    fastify.post('/monitoring/:id', { preHandler }, postStatusUpdate)
+    fastify.post('/monitoring/:id', postStatusUpdate)
     fastify.post('/monitoring/notification', { preHandler }, postStatusNotification)
     fastify.post('/monitoring/tag', { preHandler }, postTag)
 
