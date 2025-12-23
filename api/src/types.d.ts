@@ -153,6 +153,22 @@ type CheckedServiceStatus = {
     bars: Bar[]
 }
 
+type MonitoredService = {
+    id: string
+    name: string
+    type: 'fetch' | 'post'
+    url: string
+    notification: number
+    interval: number
+    expected_down: boolean
+    user_agent: string | null
+    max_consecutive_failures: number
+    note: string | null
+    notified: string
+    tags: string[]
+    enabled: boolean
+}
+
 type ServiceNotification = {
     name: string
     message: string
