@@ -169,12 +169,12 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/monitoring/tags', getTags)
 
     fastify.post('/monitoring', { preHandler }, postService)
-    fastify.put('/monitoring/:id', putStatusNotification)
     fastify.post('/monitoring/:id', postStatusUpdate)
     fastify.post('/monitoring/notification', { preHandler }, postStatusNotification)
     fastify.post('/monitoring/tag', { preHandler }, postTag)
 
     fastify.put('/monitoring/:id', { preHandler }, putService)
+    fastify.put('/monitoring/notification:id', putStatusNotification)
 
     fastify.delete('/monitoring/:id', { preHandler }, deleteStatus)
     fastify.delete('/monitoring/notification/:id', { preHandler }, deleteStatusNotification)
