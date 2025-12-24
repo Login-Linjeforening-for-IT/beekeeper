@@ -14,7 +14,7 @@ type PostStatusBody = {
     maxConsecutiveFailures: number
     note: string
     enabled: boolean
-    notification?: number
+    notification?: string
 }
 
 export default async function postService(req: FastifyRequest, res: FastifyReply) {
@@ -46,7 +46,7 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
              SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
              WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1)
              RETURNING id, name;`,
-            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note || null, enabled, notification || null, userAgent || null]
+            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note || null, enabled, Number(notification) || null, userAgent || null]
         )
 
         if (!result.rowCount) {
