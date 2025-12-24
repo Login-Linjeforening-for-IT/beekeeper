@@ -7,7 +7,7 @@ export default async function getStatusNotifications(_: FastifyRequest, res: Fas
         const result = await run('SELECT * FROM status_notifications ORDER BY name;')
         return res.send(result.rows)
     } catch (error) {
-        debug({ basic: `Database error in getStatusNotifications: ${JSON.stringify(error)}` })
+        debug({ basic: `Database error in getNotifications: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

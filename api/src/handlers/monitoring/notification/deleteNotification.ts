@@ -8,7 +8,7 @@ export default async function deleteStatusNotification(req: FastifyRequest, res:
         const result = await run('DELETE from status_notifications WHERE id = $1;', [id])
         return res.send(result.rows)
     } catch (error) {
-        debug({ basic: `Database error in deleteStatusNotification: ${JSON.stringify(error)}` })
+        debug({ basic: `Database error in deleteNotification: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

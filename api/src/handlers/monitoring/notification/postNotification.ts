@@ -38,7 +38,7 @@ export default async function postStatusNotification(
 
         return res.send({ message: `Successfully added notification ${name}.` })
     } catch (error) {
-        debug({ basic: `Database error in postStatusNotification: ${JSON.stringify(error)}` })
+        debug({ basic: `Database error in postNotification: ${JSON.stringify(error)}` })
         return res.status(500).send({ error: 'Internal Server Error' })
     }
 }

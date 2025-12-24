@@ -60,10 +60,10 @@ import postService from './handlers/monitoring/post.ts'
 import getIndex from './handlers/index/getIndex.ts'
 import getHealth from './handlers/index/getHealth.ts'
 import getVersion from './handlers/index/getVersion.ts'
-import postStatusNotification from './handlers/monitoring/postNotification.ts'
-import getStatusNotifications from './handlers/monitoring/getNotifications.ts'
+import postStatusNotification from './handlers/monitoring/notification/postNotification.ts'
+import getStatusNotifications from './handlers/monitoring/notification/getNotifications.ts'
 import deleteStatus from './handlers/monitoring/deleteStatus.ts'
-import deleteStatusNotification from './handlers/monitoring/deleteNotification.ts'
+import deleteStatusNotification from './handlers/monitoring/notification/deleteNotification.ts'
 import postTag from './handlers/monitoring/postTag.ts'
 import deleteTag from './handlers/monitoring/deleteTag.ts'
 import getTags from './handlers/monitoring/getTags.ts'
@@ -75,6 +75,7 @@ import postSite from './handlers/loadbalancing/postSite.ts'
 import putSite from './handlers/loadbalancing/putSite.ts'
 import getService from './handlers/monitoring/getService.ts'
 import putService from './handlers/monitoring/putService.ts'
+import putStatusNotification from './handlers/monitoring/notification/putNotification.ts'
 
 export default async function apiRoutes(fastify: FastifyInstance) {
     // index
@@ -168,6 +169,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/monitoring/tags', getTags)
 
     fastify.post('/monitoring', { preHandler }, postService)
+    fastify.put('/monitoring/:id', putStatusNotification)
     fastify.post('/monitoring/:id', postStatusUpdate)
     fastify.post('/monitoring/notification', { preHandler }, postStatusNotification)
     fastify.post('/monitoring/tag', { preHandler }, postTag)
