@@ -61,7 +61,7 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
             `,
             [
                 name, type, url, interval, expectedDown, maxConsecutiveFailures,
-                note, enabled, notification || null, id, userAgent || null
+                note, enabled, Number(notification) || null, id, userAgent || null
             ]
         )
 
