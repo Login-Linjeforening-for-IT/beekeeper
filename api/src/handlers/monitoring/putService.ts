@@ -29,7 +29,7 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
     }
 
     if (!name || !type || (type === 'fetch' && !url) || !interval || typeof expectedDown !== 'boolean'
-        || typeof maxConsecutiveFailures !== 'number' || !note || typeof enabled !== 'boolean') {
+        || typeof maxConsecutiveFailures !== 'number' || typeof enabled !== 'boolean') {
         return res.status(400).send({ error: 'Missing required field.' })
     }
 
