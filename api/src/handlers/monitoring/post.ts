@@ -27,7 +27,7 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    if (!name || !type || !url || !interval || typeof expectedDown !== 'boolean'
+    if (!name || !type || (type === 'fetch' && !url) || !interval || typeof expectedDown !== 'boolean'
         || typeof maxConsecutiveFailures !== 'number' || typeof enabled !== 'boolean') {
         return res.status(400).send({ error: 'Missing required field.' })
     }
