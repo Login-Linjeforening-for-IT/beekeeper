@@ -11,8 +11,8 @@ export default async function postStatusUpdate(req: FastifyRequest, res: Fastify
     try {
         const query = await loadSQL('fetchServiceWithBars.sql')
         const result = await run(query, [id])
-        if (!result) {
-            return res.status(404).send({ error: 'Service not found.' })
+        if (!result.rowCount) {
+            return res.status(404).send({ error: 'No active service found.' })
         }
 
         const timestamp = roundToNearestMinute(new Date())
