@@ -5,7 +5,7 @@ import debug from '#utils/debug.ts'
 
 type PutStatusBody = {
     name: string
-    type: 'fetch' | 'post'
+    type: MonitoredServiceType
     url: string
     interval: number
     status: boolean
@@ -14,13 +14,14 @@ type PutStatusBody = {
     note: string
     enabled: boolean
     notification?: number
+    port?: number
     userAgent?: string
 }
 
 export default async function putService(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     const {
-        name, type, url, interval, expectedDown, userAgent,
+        name, type, url, interval, expectedDown, userAgent, port,
         maxConsecutiveFailures, note, enabled, notification
     } = req.body as PutStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
@@ -37,7 +38,7 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
         debug({
             detailed: `
             Updating service: id=${id}, name=${name}, type=${type}, url=${url}, 
-            interval=${interval}, expected_down=${expectedDown}, 
+            interval=${interval}, expected_down=${expectedDown}, port=${port},
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
             enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
@@ -55,13 +56,15 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
                 note = $7,
                 enabled = $8,
                 notification = $9,
-                user_agent = $11
+                user_agent = $11,
+                port = $12
             WHERE id = $10
             RETURNING id
             `,
             [
                 name, type, url, interval, expectedDown, maxConsecutiveFailures,
-                note, enabled, Number(notification) || null, id, userAgent || null
+                note, enabled, Number(notification) || null, id,
+                userAgent || null, port || null
             ]
         )
 

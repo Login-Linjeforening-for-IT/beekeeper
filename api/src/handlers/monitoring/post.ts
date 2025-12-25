@@ -5,7 +5,7 @@ import debug from '#utils/debug.ts'
 
 type PostStatusBody = {
     name: string
-    type: 'fetch' | 'post'
+    type: MonitoredServiceType
     url: string
     interval: number
     status: boolean
@@ -14,12 +14,13 @@ type PostStatusBody = {
     maxConsecutiveFailures: number
     note: string
     enabled: boolean
+    port?: number
     notification?: string
 }
 
 export default async function postService(req: FastifyRequest, res: FastifyReply) {
     const {
-        name, type, url, interval, expectedDown, userAgent,
+        name, type, url, interval, expectedDown, userAgent, port,
         maxConsecutiveFailures, note, enabled, notification
     } = req.body as PostStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
@@ -36,17 +37,21 @@ export default async function postService(req: FastifyRequest, res: FastifyReply
         debug({
             detailed: `
             Adding service: name=${name}, type=${type}, url=${url}, 
-            interval=${interval}, expected_down=${expectedDown}, 
+            interval=${interval}, expected_down=${expectedDown}, port=${port},
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
             enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
 
         const result = await run(
-            `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification, user_agent) 
-             SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+            `INSERT INTO status (name, type, url, interval, expected_down, max_consecutive_failures, note, enabled, notification, user_agent, port) 
+             SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
              WHERE NOT EXISTS (SELECT 1 FROM status WHERE name = $1)
              RETURNING id, name;`,
-            [name, type, url, interval, expectedDown, maxConsecutiveFailures, note || null, enabled, Number(notification) || null, userAgent || null]
+            [
+                name, type, url, interval, expectedDown, maxConsecutiveFailures,
+                note || null, enabled, Number(notification) || null,
+                userAgent || null, port || null
+            ]
         )
 
         if (!result.rowCount) {

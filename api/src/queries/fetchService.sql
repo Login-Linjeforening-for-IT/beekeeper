@@ -2,6 +2,8 @@ SELECT
     s.id,
     s.name,
     s.enabled,
+    s.url,
+    s.port,
     s.max_consecutive_failures as "maxConsecutiveFailures",
     COALESCE(bars.bars, '[]'::json) AS bars,
     CASE

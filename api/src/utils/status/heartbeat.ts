@@ -2,42 +2,20 @@ import config from '#constants'
 import run from '#db'
 import { loadSQL } from '#utils/loadSQL.ts'
 import notify from './notify.ts'
-
-type Bar = {
-    status: boolean
-    delay: number
-    expectedDown: boolean
-    timestamp: string
-}
-
-type DetailedService = {
-    id: number
-    uptime: number
-    type: string
-    name: string
-    enabled: boolean
-    tags: { id: number, name: string }[]
-    bars: Bar[]
-    url: string
-    status: boolean
-    expected_down: boolean
-    user_agent: string | null
-    interval: number
-    note: string
-    max_consecutive_failures: number
-}
+import checkTcpService from './tcp.ts'
 
 export default async function monitor() {
     const servicesQuery = await loadSQL('fetchServicesWithBars.sql')
     const servicesResult = await run(servicesQuery)
     const active: (DetailedService & { bars: Bar[] })[] = []
     const passive: (DetailedService & { bars: Bar[] })[] = []
+    const tcp: (DetailedService & { bars: Bar[] })[] = []
 
     for (const row of servicesResult.rows as (DetailedService & { bars: Bar[] })[]) {
-        if (row.type === 'fetch') {
-            active.push(row)
-        } else {
-            passive.push(row)
+        switch (row.type) {
+            case 'fetch': active.push(row); break
+            case 'post': passive.push(row); break
+            case 'tcp': tcp.push(row); break
         }
     }
 
@@ -53,6 +31,21 @@ export default async function monitor() {
                 INSERT INTO status_details (service_id, status, expected_down, delay, note)
                 VALUES ($1, $2, $3, $4, $5)
             `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
+        }
+    })
+
+    await runInParallel(tcp, async (service) => {
+        if (
+            !Array.isArray(service.bars)
+            || !service.bars.length
+            || (new Date().getTime() - new Date(service.bars[0].timestamp).getTime() > service.interval * 1000)
+        ) {
+            const check = await recheckTCP(service)
+
+            await run(`
+                    INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                    VALUES ($1, $2, $3, $4, $5)
+                `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
         }
     })
 
@@ -118,6 +111,28 @@ async function recheck(service: DetailedService): Promise<{ status: boolean, del
 
     for (let i = 0; i < config.MAX_ATTEMPTS; i++) {
         const check = await fetchService(service)
+
+        if (check.status) {
+            return {
+                status: check.status,
+                delay: Date.now() - start
+            }
+        }
+
+        if (i < config.MAX_ATTEMPTS - 1) {
+            const jitter = 1000 + Math.random() * 1000
+            await new Promise(r => setTimeout(r, jitter))
+        }
+    }
+
+    return { status: false, delay: Date.now() - start }
+}
+
+async function recheckTCP(service: DetailedService): Promise<{ status: boolean, delay: number }> {
+    const start = Date.now()
+
+    for (let i = 0; i < config.MAX_ATTEMPTS; i++) {
+        const check = await checkTcpService(service)
 
         if (check.status) {
             return {

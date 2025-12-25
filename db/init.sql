@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS traffic (
 CREATE TABLE IF NOT EXISTS status (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    type TEXT NOT NULL CHECK (type IN ('fetch', 'post')),
+    type TEXT NOT NULL CHECK (type IN ('fetch', 'post', 'tcp')),
     url TEXT,
     notification INTEGER,
     interval INTEGER NOT NULL,
@@ -198,6 +198,7 @@ CREATE TABLE IF NOT EXISTS status (
     note TEXT,
     notified TIMESTAMPTZ,
     tags INTEGER[] DEFAULT '{}',
+    port INTEGER,
     enabled BOOLEAN NOT NULL DEFAULT TRUE
 );
 
