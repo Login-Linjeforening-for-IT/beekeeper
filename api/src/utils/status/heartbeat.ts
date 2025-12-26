@@ -109,7 +109,7 @@ export default async function monitor() {
 async function recheck(service: DetailedService): Promise<{ status: boolean, delay: number }> {
     const start = Date.now()
 
-    for (let i = 0; i < config.MAX_ATTEMPTS; i++) {
+    for (let i = 0; i < config.max.attempts; i++) {
         const check = await fetchService(service)
 
         if (check.status) {
@@ -119,7 +119,7 @@ async function recheck(service: DetailedService): Promise<{ status: boolean, del
             }
         }
 
-        if (i < config.MAX_ATTEMPTS - 1) {
+        if (i < config.max.attempts - 1) {
             const jitter = 1000 + Math.random() * 1000
             await new Promise(r => setTimeout(r, jitter))
         }
@@ -131,7 +131,7 @@ async function recheck(service: DetailedService): Promise<{ status: boolean, del
 async function recheckTCP(service: DetailedService): Promise<{ status: boolean, delay: number }> {
     const start = Date.now()
 
-    for (let i = 0; i < config.MAX_ATTEMPTS; i++) {
+    for (let i = 0; i < config.max.attempts; i++) {
         const check = await checkTcpService(service)
 
         if (check.status) {
@@ -141,7 +141,7 @@ async function recheckTCP(service: DetailedService): Promise<{ status: boolean, 
             }
         }
 
-        if (i < config.MAX_ATTEMPTS - 1) {
+        if (i < config.max.attempts - 1) {
             const jitter = 1000 + Math.random() * 1000
             await new Promise(r => setTimeout(r, jitter))
         }
@@ -156,7 +156,7 @@ async function runInParallel<T>(
 ) {
     const queue = [...items]
 
-    const workers = Array.from({ length: config.MAX_CONCURRENCY }, async () => {
+    const workers = Array.from({ length: config.max.concurrency }, async () => {
         while (true) {
             const item = queue.shift()
             if (!item) {

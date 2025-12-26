@@ -2,7 +2,7 @@ import getNamespaces from '#utils/getNamespaces.ts'
 import { contexts, fallback, priority } from './defaults.ts'
 import worstAndBestServiceStatus from './worstAndBestServiceStatus.ts'
 
-export async function preloadStatus(): Promise<Status> {
+export default async function preloadStatus(): Promise<Status> {
     try {
         const namespaces = await getNamespaces()
         const prod: Service[] = []

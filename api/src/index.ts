@@ -16,6 +16,8 @@ const fastify = Fastify({
 
 fastify.decorate('status', Buffer.from(JSON.stringify({ ...fallback.degraded })))
 fastify.decorate('favicon', fs.readFileSync(path.join(process.cwd(), 'public', 'favicon.ico')))
+fastify.decorate('internalDashboard', Buffer.from(''))
+
 fastify.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']

@@ -246,3 +246,46 @@ type DetailedService = {
     max_consecutive_failures: number
     port: number | null
 }
+
+type InternalDashboard = {
+    statistics: InternalDashboardStatistics
+    information: InternalDashboardInformation
+}
+
+type InternalDashboardStatistics = {
+    alerts: number
+    backups: number
+    sites: number
+    kubernetes: number
+    monitored: number
+    requestsToday: number
+}
+
+type InternalDashboardInformation = {
+    primarySite: {
+        id: number
+        name: string
+        ip: string
+    }
+    system: {
+        ram: string
+        processes: number
+        disk: string
+        load: string
+        containers: number
+    }
+}
+
+type PrimarySite = {
+    id: number
+    name: string
+    ip: string
+}
+
+type System = {
+    ram: string
+    processes: number
+    disk: string
+    load: string
+    containers: number
+}

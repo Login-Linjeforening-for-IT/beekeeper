@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 
-dotenv.config({path: '../.env'})
+dotenv.config({ path: '../.env' })
 
 const requiredEnvironmentVariables = [
     'DOCTL_TOKEN',
@@ -19,7 +19,6 @@ const requiredEnvironmentVariables = [
     'WEBHOOK_URL',
     'CRITICAL_ROLE',
     'CRITICAL_DEVELOPMENT_ROLE',
-    'HEARTBEAT_REFERENCE',
     'TRAFFIC_SECRET'
 ]
 
@@ -27,12 +26,12 @@ const missingVariables = requiredEnvironmentVariables.filter(
     (key) => !process.env[key]
 )
 
-if ( missingVariables.length > 0) {
+if (missingVariables.length > 0) {
     throw new Error(
         'Missing essential environment variables:\n' +
-            missingVariables
-                .map((key) => `${key}: ${process.env[key] || 'undefined'}`)
-                .join('\n')
+        missingVariables
+            .map((key) => `${key}: ${process.env[key] || 'undefined'}`)
+            .join('\n')
     )
 }
 
@@ -63,7 +62,7 @@ const config = {
     AUTH_URL,
     TOKEN_URL,
     USERINFO_URL,
-    BEEKEEPER_URL: env.BEEKEEPER_URL,
+    beekeeper: env.BEEKEEPER_URL,
     USER_ENDPOINT,
     AUTHENTIK_TOKEN: env.AUTHENTIK_TOKEN,
     BTG_TOKEN: env.BTG_TOKEN,
@@ -74,12 +73,16 @@ const config = {
     DEFAULT_CLUSTER: 'infra-prod-cluster',
     WARN_SLOW_QUERY_MS: 5000,
     TIMEOUT_MS: 30000,
-    HEARTBEAT_URL: 'https://status.login.no/api/push/{reference}?status=up&msg=OK&ping={ping}',
-    HEARTBEAT_REFERENCE: env.HEARTBEAT_REFERENCE,
     TRAFFIC_SECRET: env.TRAFFIC_SECRET,
-    CACHE_TTL: 60000,
-    MAX_ATTEMPTS: 5,
-    MAX_CONCURRENCY: 5
+    cache: {
+        ttl: 60000
+    },
+    max: {
+        attempts: 5,
+        concurrency: 5
+    },
+    internal: 'https://internal.login.no/api',
+    workerbee: 'https://workerbee.login.no/api/v2'
 }
 
 export default config

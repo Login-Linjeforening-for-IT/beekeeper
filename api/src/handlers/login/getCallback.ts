@@ -2,7 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import config from '#constants'
 import debug from '#utils/debug.ts'
 
-const { TOKEN_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, USERINFO_URL, BEEKEEPER_URL } = config
+const { TOKEN_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, USERINFO_URL, beekeeper } = config
 
 type UserInfo = {
     sub: string
@@ -57,7 +57,7 @@ export default async function getCallback(req: FastifyRequest, res: FastifyReply
 
         const userInfo = await userInfoResponse.json() as UserInfo
 
-        const redirectUrl = new URL(`${BEEKEEPER_URL}/login`)
+        const redirectUrl = new URL(`${beekeeper}/login`)
         const params = new URLSearchParams({
             id: userInfo.sub,
             name: userInfo.name,
