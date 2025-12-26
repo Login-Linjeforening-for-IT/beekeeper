@@ -23,6 +23,11 @@ services:
       - queenbee_default
     mem_limit: 1g
     cpus: "2.0"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+      - 10.177.195.1
+      - 213.186.33.99
 
   postgres:
     image: postgres:18
@@ -43,6 +48,11 @@ services:
       - beekeeper_default
     mem_limit: 1g
     cpus: "2.0"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+      - 10.177.195.1
+      - 213.186.33.99
 
 networks:
   beekeeper_default:
