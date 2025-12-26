@@ -23,11 +23,6 @@ services:
       - queenbee_default
     mem_limit: 1g
     cpus: "2.0"
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-      - 10.177.195.1
-      - 213.186.33.99
 
   postgres:
     image: postgres:18
@@ -48,11 +43,23 @@ services:
       - beekeeper_default
     mem_limit: 1g
     cpus: "2.0"
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-      - 10.177.195.1
-      - 213.186.33.99
+
+  beekeeper_cron:
+    container_name: beekeeper_cron
+    image: alpine-base
+    mem_limit: 1g
+    cpus: "2.0"
+    restart: always
+    build:
+      context: ./cron
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      DB_USER: beekeeper
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: beekeeper
+      DB_HOST: postgres
 
 networks:
   beekeeper_default:

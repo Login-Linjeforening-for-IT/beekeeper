@@ -1,5 +1,5 @@
 {
-  "name": "beekeeper-api",
+  "name": "beekeeper",
   "version": "1.5.15",
   "main": "src/index.ts",
   "type": "module",
