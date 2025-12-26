@@ -4,8 +4,8 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run src/index.ts",
-    "trace": "bun run --trace-gc src/index.ts",
+    "start": "node src/index.ts",
+    "trace": "node --trace-gc src/index.ts",
     "lint": "eslint --fix ./src"
   },
   "keywords": [],
