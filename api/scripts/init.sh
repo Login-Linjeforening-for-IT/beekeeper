@@ -74,4 +74,4 @@ crond -b
 echo "🐝 Started cron."
 echo "🐝 BeeKeeper initiated."
 
-bun run start
+npm start
