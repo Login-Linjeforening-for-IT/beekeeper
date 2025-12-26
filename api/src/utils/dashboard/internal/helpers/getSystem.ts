@@ -2,7 +2,7 @@ import config from '#constants'
 
 export default async function getSystem(): Promise<System> {
     try {
-        const response = await fetch(`${config.beekeeper}/stats/dashboard`)
+        const response = await fetch(`${config.internal}/stats/dashboard`)
         if (!response.ok) {
             throw new Error(await response.text())
         }
