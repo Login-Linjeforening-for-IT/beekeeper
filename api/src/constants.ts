@@ -1,7 +1,3 @@
-import dotenv from 'dotenv'
-
-dotenv.config({ path: '../.env' })
-
 const requiredEnvironmentVariables = [
     'DOCTL_TOKEN',
     'PRIVATE_TOKEN',
