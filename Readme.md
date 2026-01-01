@@ -2,7 +2,7 @@
 Service to monitor all the bees.
 
 ## Building
-To start the frontend run `docker compose up`. This will start the api on port 8001. The secrets required are detailed on the wiki.
+To start the frontend run `docker compose up`. This will start the api.
 
 Required secrets:
 ```
@@ -22,7 +22,7 @@ BTG_TOKEN
 CRITICAL_ROLE
 CRITICAL_DEVELOPMENT_ROLE
 WEBHOOK_URL
-HEARTBEAT_REFERENCE
+TRAFFIC_SECRET
 ```
 
 # BeeKeeper API
