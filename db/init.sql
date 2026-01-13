@@ -180,7 +180,8 @@ CREATE TABLE IF NOT EXISTS traffic (
     referer TEXT NOT NULL,
     request_time DOUBLE PRECISION NOT NULL,
     status INTEGER NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    country_iso TEXT
 );
 
 -- Status table

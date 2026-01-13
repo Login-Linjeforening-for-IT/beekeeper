@@ -12,6 +12,7 @@ type PostTrafficBody = {
     timestamp: number
     request_time: number
     status: number
+    country_iso?: string
 }
 
 export default async function postTraffic(req: FastifyRequest, res: FastifyReply) {
@@ -24,7 +25,7 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
         return res.status(403).send({ error: 'Forbidden' })
     }
 
-    const { user_agent, domain, path, method, referer, timestamp, request_time, status } = req.body as PostTrafficBody || {}
+    const { user_agent, domain, path, method, referer, timestamp, request_time, status, country_iso } = req.body as PostTrafficBody || {}
 
     if (!user_agent || !domain || !path || !method || !referer || request_time === undefined || timestamp === undefined || status === undefined) {
         return res.status(400).send({ error: 'Missing required fields.' })
@@ -34,9 +35,9 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
         const ts = new Date(timestamp).toISOString()
 
         await run(
-            `INSERT INTO traffic (user_agent, domain, path, method, referer, request_time, status, timestamp)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`,
-            [user_agent, domain, path, method, referer, request_time, status, ts]
+            `INSERT INTO traffic (user_agent, domain, path, method, referer, request_time, status, timestamp, country_iso)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+            [user_agent, domain, path, method, referer, request_time, status, ts, country_iso || null]
         )
 
         return res.send({ message: 'Traffic logged successfully.' })
