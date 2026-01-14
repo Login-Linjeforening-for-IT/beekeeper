@@ -1,4 +1,5 @@
 import cors from '@fastify/cors'
+import sse from '@fastify/sse'
 import Fastify from 'fastify'
 import fs from 'fs'
 import path from 'path'
@@ -22,6 +23,8 @@ fastify.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
 })
+
+fastify.register(sse)
 
 const port = Number(process.env.PORT) || 8080
 

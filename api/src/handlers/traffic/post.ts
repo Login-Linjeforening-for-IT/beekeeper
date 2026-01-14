@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 import debug from '#utils/debug.ts'
 import config from '#constants'
+import trafficEmitter from '#utils/trafficEmitter.ts'
 
 type PostTrafficBody = {
     user_agent: string
@@ -39,6 +40,8 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
             [user_agent, domain, path, method, referer, request_time, status, ts, country_iso || null]
         )
+
+        trafficEmitter.emit('traffic', { country_iso })
 
         return res.send({ message: 'Traffic logged successfully.' })
     } catch (error) {

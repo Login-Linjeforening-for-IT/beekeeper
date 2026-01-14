@@ -55,6 +55,7 @@ import postTraffic from './handlers/traffic/post.ts'
 import getMetrics from './handlers/traffic/getMetrics.ts'
 import getRecords from './handlers/traffic/getRecords.ts'
 import getDomains from './handlers/traffic/getDomains.ts'
+import getLive from './handlers/traffic/getLive.ts'
 import postStatusUpdate from './handlers/monitoring/postUpdate.ts'
 import postService from './handlers/monitoring/post.ts'
 import getIndex from './handlers/index/getIndex.ts'
@@ -160,7 +161,7 @@ export default async function apiRoutes(fastify: FastifyInstance) {
     fastify.get('/traffic/metrics', { preHandler }, getMetrics)
     fastify.get('/traffic/records', { preHandler }, getRecords)
     fastify.get('/traffic/domains', { preHandler }, getDomains)
-
+    fastify.get('/traffic/live', { sse: true, preHandler }, getLive)
     fastify.post('/traffic', postTraffic)
 
     // status
