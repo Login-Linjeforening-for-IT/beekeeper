@@ -41,7 +41,7 @@ export default async function postTraffic(req: FastifyRequest, res: FastifyReply
             [user_agent, domain, path, method, referer, request_time, status, ts, country_iso || null]
         )
 
-        trafficEmitter.emit('traffic', { country_iso })
+        trafficEmitter.emit('traffic', { country_iso, timestamp })
 
         return res.send({ message: 'Traffic logged successfully.' })
     } catch (error) {
