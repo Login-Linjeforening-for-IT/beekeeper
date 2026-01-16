@@ -257,6 +257,9 @@ CREATE INDEX IF NOT EXISTS idx_traffic_domain_btree ON traffic (domain);
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_status ON traffic (timestamp DESC, status);
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_domain ON traffic (timestamp DESC, domain);
 CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_method ON traffic (timestamp DESC, method);
+CREATE INDEX IF NOT EXISTS idx_traffic_domain_timestamp ON traffic (domain, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_path ON traffic (timestamp DESC, path);
+CREATE INDEX IF NOT EXISTS idx_traffic_timestamp_user_agent ON traffic (timestamp DESC, user_agent);
 
 -- --- Local log optimizations ---
 
