@@ -138,6 +138,7 @@ type CheckedServiceStatus = {
     notification: number
     interval: number
     expected_down: boolean
+    upside_down: boolean
     max_consecutive_failures: number
     note: string
     notified: null | boolean
@@ -167,6 +168,7 @@ type MonitoredService = {
     notification: number
     interval: number
     expected_down: boolean
+    upside_down: boolean
     user_agent: string | null
     max_consecutive_failures: number
     note: string | null
@@ -240,6 +242,7 @@ type DetailedService = {
     url: string
     status: boolean
     expected_down: boolean
+    upside_down: boolean
     user_agent: string | null
     interval: number
     note: string

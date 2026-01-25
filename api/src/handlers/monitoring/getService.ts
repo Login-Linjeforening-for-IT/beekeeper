@@ -19,6 +19,7 @@ export default async function getService(req: FastifyRequest, res: FastifyReply)
             notification: row.notification,
             interval: row.interval,
             expectedDown: row.expected_down,
+            upsideDown: row.upside_down,
             userAgent: row.user_agent,
             maxConsecutiveFailures: row.max_consecutive_failures,
             note: row.note,

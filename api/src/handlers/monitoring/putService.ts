@@ -10,6 +10,7 @@ type PutStatusBody = {
     interval: number
     status: boolean
     expectedDown: boolean
+    upsideDown: boolean
     maxConsecutiveFailures: number
     note: string
     enabled: boolean
@@ -21,7 +22,7 @@ type PutStatusBody = {
 export default async function putService(req: FastifyRequest, res: FastifyReply) {
     const { id } = req.params as { id: string }
     const {
-        name, type, url, interval, expectedDown, userAgent, port,
+        name, type, url, interval, expectedDown, upsideDown, userAgent, port,
         maxConsecutiveFailures, note, enabled, notification
     } = req.body as PutStatusBody || {}
     const { valid } = await tokenWrapper(req, res)
@@ -29,8 +30,11 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
         return res.status(400).send({ error: 'Unauthorized' })
     }
 
-    if (!name || !type || (type === 'fetch' && !url) || !interval || typeof expectedDown !== 'boolean'
-        || typeof maxConsecutiveFailures !== 'number' || typeof enabled !== 'boolean') {
+    if (
+        !name || !type || (type === 'fetch' && !url) || !interval
+        || typeof expectedDown !== 'boolean' || typeof upsideDown !== 'boolean'
+        || typeof maxConsecutiveFailures !== 'number' || typeof enabled !== 'boolean'
+    ) {
         return res.status(400).send({ error: 'Missing required field.' })
     }
 
@@ -38,7 +42,8 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
         debug({
             detailed: `
             Updating service: id=${id}, name=${name}, type=${type}, url=${url}, 
-            interval=${interval}, expected_down=${expectedDown}, port=${port},
+            interval=${interval}, expected_down=${expectedDown}, 
+            upside_down=${upsideDown}, port=${port},
             max_consecutive_failures=${maxConsecutiveFailures}, note=${note}, 
             enabled=${enabled}, notification=${notification}, user_agent=${userAgent}
         ` })
@@ -52,19 +57,20 @@ export default async function putService(req: FastifyRequest, res: FastifyReply)
                 url = $3,
                 interval = $4,
                 expected_down = $5,
-                max_consecutive_failures = $6,
-                note = $7,
-                enabled = $8,
-                notification = $9,
-                user_agent = $11,
-                port = $12
-            WHERE id = $10
+                upside_down = $6,
+                max_consecutive_failures = $7,
+                note = $8,
+                enabled = $9,
+                notification = $10,
+                user_agent = $12,
+                port = $13
+            WHERE id = $11
             RETURNING id
             `,
             [
-                name, type, url, interval, expectedDown, maxConsecutiveFailures,
-                note, enabled, Number(notification) || null, id,
-                userAgent || null, port || null
+                name, type, url, interval, expectedDown, upsideDown,
+                maxConsecutiveFailures, note, enabled,
+                Number(notification) || null, id, userAgent || null, port || null
             ]
         )
 

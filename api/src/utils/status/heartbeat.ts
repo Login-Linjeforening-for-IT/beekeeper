@@ -28,9 +28,9 @@ export default async function monitor() {
             const check = await recheck(service)
 
             await run(`
-                INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                INSERT INTO status_details (service_id, status, expected_down, upside_down, delay, note)
                 VALUES ($1, $2, $3, $4, $5)
-            `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
+            `, [service.id, check.status, service.expected_down, service.upside_down, check.delay, service.note ?? null])
         }
     })
 
@@ -43,9 +43,9 @@ export default async function monitor() {
             const check = await recheckTCP(service)
 
             await run(`
-                    INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                    INSERT INTO status_details (service_id, status, expected_down, upside_down, delay, note)
                     VALUES ($1, $2, $3, $4, $5)
-                `, [service.id, check.status, service.expected_down, check.delay, service.note ?? null])
+                `, [service.id, check.status, service.expected_down, service.upside_down, check.delay, service.note ?? null])
         }
     })
 
@@ -53,14 +53,14 @@ export default async function monitor() {
         const oneMinuteAgo = new Date(Date.now() - 60 * 1000)
         if (!service.bars.length) {
             await run(`
-                INSERT INTO status_details (service_id, status, expected_down, delay, note, timestamp)
+                INSERT INTO status_details (service_id, status, expected_down, upside_down, delay, note, timestamp)
                 VALUES ($1, $2, $3, $4, $5, $6)
-            `, [service.id, false, service.expected_down, 0, service.note ?? null, oneMinuteAgo.toISOString()])
+            `, [service.id, false, service.expected_down, service.upside_down, 0, service.note ?? null, oneMinuteAgo.toISOString()])
 
             await run(`
-                INSERT INTO status_details (service_id, status, expected_down, delay, note)
+                INSERT INTO status_details (service_id, status, expected_down, upside_down, delay, note)
                 VALUES ($1, $2, $3, $4, $5)
-            `, [service.id, false, service.expected_down, 0, service.note ?? null])
+            `, [service.id, false, service.expected_down, service.upside_down, 0, service.note ?? null])
         }
     })
 
