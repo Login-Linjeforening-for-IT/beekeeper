@@ -16,10 +16,7 @@ export default async function postStatusUpdate(req: FastifyRequest, res: Fastify
         }
 
         const timestamp = roundToNearestMinute(new Date())
-        console.log('result', result.rows)
         const service = result.rows[0]
-        console.log('this is the service', service)
-        console.log('inserting', [id, service.expected_down, service.upside_down, true, delay ? Number(delay) : 0, service.note, timestamp])
         await run(
             `INSERT INTO status_details (service_id, expected_down, upside_down, status, delay, note, timestamp)
             SELECT $1, $2, $3, $4, $5, $6, $7
