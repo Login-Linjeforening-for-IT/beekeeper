@@ -22,7 +22,7 @@ export default async function postStatusUpdate(req: FastifyRequest, res: Fastify
             SELECT $1, $2, $3, $4, $5, $6, $7
             WHERE NOT EXISTS (
                 SELECT 1 FROM status_details
-                WHERE service_id = $1 AND timestamp = $6
+                WHERE service_id = $1 AND timestamp = $7
             )`,
             [id, service.expected_down, service.upside_down, true, delay ? Number(delay) : 0, service.note, timestamp]
         )
