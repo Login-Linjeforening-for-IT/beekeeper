@@ -14,6 +14,7 @@ LEFT JOIN LATERAL (
         'id', sd.id,
         'status', sd.status,
         'expected_down', sd.expected_down,
+        'upside_down', sd.upside_down,
         'delay', sd.delay,
         'note', sd.note,
         'timestamp', sd.timestamp

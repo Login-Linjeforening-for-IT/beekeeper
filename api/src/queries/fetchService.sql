@@ -23,6 +23,7 @@ LEFT JOIN LATERAL (
                 'status', status,
                 'delay', delay,
                 'expectedDown', expected_down,
+                'upsideDown', upside_down,
                 'note', note,
                 'timestamp', timestamp
             )
