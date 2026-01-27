@@ -9,6 +9,7 @@ LEFT JOIN LATERAL (
                 'id', d.id,
                 'status', d.status,
                 'expected_down', d.expected_down,
+                'upside_down', d.upside_down,
                 'delay', d.delay,
                 'note', d.note,
                 'timestamp', d.timestamp
