@@ -56,10 +56,12 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_USER: beekeeper
+      DB_USER: ${DB_USER:-beekeeper}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: beekeeper
+      DB_NAME: ${DB:-beekeeper}
       DB_HOST: postgres
+    networks:
+      - beekeeper_default
 
 networks:
   beekeeper_default:
