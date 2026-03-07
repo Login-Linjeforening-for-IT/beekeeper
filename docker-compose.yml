@@ -18,9 +18,6 @@ services:
       interval: 5s
       retries: 5
       start_period: 10m
-    networks:
-      - beekeeper_default 
-      - queenbee_default
     mem_limit: 1g
     cpus: "2.0"
 
@@ -39,8 +36,6 @@ services:
       test: ["CMD-SHELL", "pg_isready -U beekeeper -d beekeeper"]
       interval: 5s
       retries: 5
-    networks:
-      - beekeeper_default
     mem_limit: 1g
     cpus: "2.0"
 
@@ -60,14 +55,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB:-beekeeper}
       DB_HOST: postgres
-    networks:
-      - beekeeper_default
-
-networks:
-  beekeeper_default:
-    external: false
-  queenbee_default:
-    external: true
 
 volumes:
   postgres_data:
