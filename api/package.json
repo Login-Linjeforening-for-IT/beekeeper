@@ -21,7 +21,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^25.4.0",
+    "@types/node": "^25.5.0",
     "@types/pg": "^8.18.0",
     "eslint": "^10.0.3",
     "typescript": "^5.9.3",
